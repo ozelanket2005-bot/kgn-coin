@@ -1,0 +1,5 @@
+[user]
+	email = eposta_adresin@gmail.com
+	name = ozelanket2005-bot
+[http]
+	postBuffer = 524288000
