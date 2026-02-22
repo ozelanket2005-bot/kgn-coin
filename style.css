@@ -1,4 +1,3 @@
-/* Genel Ayarlar */
 body { 
     background: #000; 
     color: #fff; 
@@ -11,7 +10,6 @@ body {
     flex-direction: column;
 }
 
-/* 1. Saatlik Kazanç: Sol Üstte Sabit */
 #hourly-rate-container { 
     position: fixed; 
     top: 20px; 
@@ -19,92 +17,76 @@ body {
     color: #f3ba2f; 
     font-weight: bold; 
     font-size: 18px; 
-    z-index: 1000;
 }
 
-/* Sayfa Konumlandırması */
 .page { 
-    display: none; 
+    display: flex; 
     flex-direction: column;
     height: 100vh;
     width: 100%;
-    position: relative;
-}
-.page.active { 
-    display: flex; 
 }
 
-/* 2. Bakiye: En Üstte Orta */
 .balance-section { 
-    margin-top: 80px; 
+    margin-top: 70px; 
     text-align: center; 
-    width: 100%;
 }
+
 #balance { 
     font-size: 65px; 
     font-weight: bold; 
     color: #f3ba2f; 
 }
-#user-rank { 
-    font-size: 18px; 
-    color: #888; 
-}
 
-/* 3. ALTIN PARA: TAM MERKEZDE VE DEVASA */
+/* PARA GÖRÜNÜMÜNÜ GARANTİLEYEN KISIM */
 .coin-container { 
-    flex-grow: 1;
+    flex-grow: 1; 
     display: flex; 
     justify-content: center; 
     align-items: center; 
-    width: 100%;
 }
+
 .coin-container img { 
-    width: 420px; /* Görseli devleştirir */
-    max-width: 92%; 
+    width: 350px; /* Boyutu 350px olarak sabitledim */
+    height: auto;
+    max-width: 90%; 
+    display: block; /* Görünürlüğü zorunlu kılar */
     cursor: pointer; 
-    transition: transform 0.05s; /* 50ms hıza uygun tepki */
+    transition: transform 0.05s; /* 50ms hıza uygun */
     user-select: none;
     -webkit-tap-highlight-color: transparent;
-    display: block;
 }
+
 .coin-container img:active { 
     transform: scale(0.95); 
 }
 
-/* 4. Enerji Bölümü: Menünün Üstüne Sabit */
 .energy-section { 
-    position: absolute;
-    bottom: 100px; /* Alt menünün hemen üstü */
-    width: 100%; 
+    margin-bottom: 110px; 
     text-align: center; 
 }
+
 .energy-bar { 
     background: #222; 
     height: 16px; 
     width: 85%; 
-    margin: 0 auto 8px; 
+    margin: 0 auto 10px; 
     border-radius: 10px; 
     border: 1px solid #333; 
     overflow: hidden; 
 }
+
 #energy-fill { 
     background: linear-gradient(90deg, #f3ba2f, #ffca28); 
     height: 100%; 
     width: 100%; 
 }
-#energy-text { 
-    font-size: 20px; 
-    font-weight: bold; 
-}
 
-/* 5. Geri Sayım Sayacı: Enerji Barının Altında */
 #energy-timer { 
     font-size: 14px; 
     color: #f3ba2f; 
     margin-top: 5px; 
 }
 
-/* Alt Menü Çubuğu: En Alta Çakılı */
 .bottom-nav { 
     position: fixed; 
     bottom: 0; 
@@ -113,13 +95,11 @@ body {
     background: #111; 
     padding: 20px 0; 
     border-top: 1px solid #333; 
-    z-index: 1000;
 }
+
 .nav-item { 
     flex: 1; 
     text-align: center; 
-    cursor: pointer; 
     font-size: 16px; 
     color: #888; 
-    }
-    
+}
