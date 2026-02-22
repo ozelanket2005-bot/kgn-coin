@@ -1,16 +1,16 @@
-// OYUNCU VERİLERİ (KAYITLI)
-let state = JSON.parse(localStorage.getItem('kgn_pro_v1')) || {
+// DURUM KAYDI
+let state = JSON.parse(localStorage.getItem('kgn_v6_final')) || {
     balance: 0,
     hourlyIncome: 0,
     energy: 500,
     inventory: [],
     tapPower: 5,
     lastUpdate: Date.now(),
-    adStats: { goldAds: 0, clickAds: 0, energyAds: 0 }
+    ads: { gold: 0, click: 0, energy: 0 }
 };
 
-// ADSGRAM BAĞLANTISI (Senin Yeni Oluşturduğun Block ID)
-const AdController = window.Adsgram.init({ blockId: "23508" }); // Buraya paneldeki ID'ni yazabilirsin
+// ADSGRAM ID (Panelindeki ID ile eşleşmeli)
+const AdController = window.Adsgram ? window.Adsgram.init({ blockId: "23508" }) : null;
 
 const borsaKartlari = [
     { id: 'ym', name: 'Yazılım Mühendisi', price: 5000, income: 1000 },
@@ -25,7 +25,6 @@ function init() {
     renderMarket();
     createParticles();
     
-    // Çevrimdışı Kazanç Hesapla
     let gap = (Date.now() - state.lastUpdate) / 1000;
     state.balance += (state.hourlyIncome / 3600) * gap;
 
@@ -34,8 +33,7 @@ function init() {
 
 function tick() {
     state.balance += (state.hourlyIncome / 3600);
-    if (state.energy < 500) state.energy += (500 / 10800); // 3 saat dolum
-    
+    if (state.energy < 500) state.energy += 0.05; // Yavaş dolum
     updateUI();
     save();
 }
@@ -45,49 +43,61 @@ function updateUI() {
     document.getElementById('hourly-display').innerText = "+" + state.hourlyIncome + " KGn";
     document.getElementById('current-energy').innerText = Math.floor(state.energy);
     document.getElementById('energy-fill').style.width = (state.energy / 500 * 100) + "%";
-
-    let rem = Math.max(0, (500 - state.energy) * (10800 / 500));
-    let m = Math.floor(rem / 60);
-    let s = Math.floor(rem % 60);
-    document.getElementById('cooldown-timer').innerText = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
 }
 
-// REKLAM İZLEME VE ÖDÜL SİSTEMİ
-function runRewardAd(type) {
+// REKLAM SİSTEMİ (TAMİR EDİLDİ)
+async function runRewardAd(type) {
+    if (!AdController) return alert("Reklam sistemi hazır değil!");
+
     AdController.show().then(() => {
-        // Reklam başarıyla izlendiğinde burası çalışır (Para kazanırsın)
+        // Reklam bittiğinde ödül ver
         if (type === 'gold') {
-            if (state.adStats.goldAds < 10) {
+            if (state.ads.gold < 10) {
                 state.balance += 100;
-                state.adStats.goldAds++;
-                alert("Tebrikler Efendim Kaan! +100 KGn hesaba geçti.");
-            } else {
-                alert("Bugünlük KGn paketi limitin doldu!");
-            }
+                state.ads.gold++;
+                alert("Ödül: +100 KGn hesaba eklendi!");
+            } else { alert("Günlük limit doldu!"); }
         } 
         else if (type === 'click') {
-            state.adStats.clickAds++;
-            if (state.adStats.clickAds >= 2) {
+            state.ads.click++;
+            if (state.ads.click >= 2) {
                 state.tapPower = 10;
-                state.adStats.clickAds = 0;
-                document.getElementById('c-status').innerText = "AKTİF (1 Saat)";
-                setTimeout(() => { state.tapPower = 5; document.getElementById('c-status').innerText = "Pasif"; }, 3600000);
-            } else {
-                alert("Bir reklam daha izle, gücün katlansın!");
-            }
+                state.ads.click = 0;
+                alert("1 Saatlik 2x Güç Aktif!");
+                document.getElementById('c-status').innerText = "AKTİF";
+                setTimeout(() => { state.tapPower = 5; }, 3600000);
+            } else { alert("Son 1 reklam kaldı!"); }
         }
         else if (type === 'energy') {
-            state.adStats.energyAds++;
-            if (state.adStats.energyAds >= 2) {
+            state.ads.energy++;
+            if (state.ads.energy >= 2) {
                 state.energy = 500;
-                state.adStats.energyAds = 0;
-                alert("Enerji Fullendi!");
-            }
+                state.ads.energy = 0;
+                alert("Enerji Deposu Fullendi!");
+            } else { alert("Son 1 reklam kaldı!"); }
         }
         save();
-        updateUI();
-    }).catch(() => {
-        alert("Reklam yüklenemedi, lütfen tekrar deneyin.");
+    }).catch((err) => {
+        console.error(err);
+        alert("Reklam henüz yüklenmedi, lütfen az sonra tekrar deneyin.");
+    });
+}
+
+function renderMarket() {
+    const list = document.getElementById('market-list');
+    list.innerHTML = ''; // Temizle ve yeniden yaz
+    borsaKartlari.forEach(k => {
+        let isOwned = state.inventory.includes(k.id);
+        list.innerHTML += `
+            <div class="market-card">
+                <div>
+                    <strong>${k.name}</strong><br>
+                    <small>Gelir: +${k.income} KGn/saat</small>
+                </div>
+                <button class="task-go-btn" ${isOwned ? 'disabled' : ''} onclick="buyCard('${k.id}', ${k.price}, ${k.income})">
+                    ${isOwned ? 'SAHİPSİN' : k.price + ' KGn'}
+                </button>
+            </div>`;
     });
 }
 
@@ -98,55 +108,20 @@ function buyCard(id, price, income) {
         state.inventory.push(id);
         renderMarket();
         save();
-    } else {
-        alert("Yetersiz KGn!");
-    }
+    } else { alert("Yetersiz KGn!"); }
 }
 
 function handleTap(e) {
     if (state.energy >= 5) {
         state.balance += state.tapPower;
         state.energy -= 5;
-        createTapAnim(e);
-        updateUI();
-    }
-}
-
-function createTapAnim(e) {
-    let p = document.createElement('div');
-    p.className = 'plus-anim';
-    p.innerText = "+" + state.tapPower;
-    p.style.left = e.clientX + 'px';
-    p.style.top = e.clientY + 'px';
-    document.body.appendChild(p);
-    setTimeout(() => p.remove(), 700);
-}
-
-function renderMarket() {
-    const list = document.getElementById('market-list');
-    list.innerHTML = '';
-    borsaKartlari.forEach(card => {
-        let isOwned = state.inventory.includes(card.id);
-        list.innerHTML += `
-            <div class="kgn-card">
-                <div><strong>${card.name}</strong><br><small>+${card.income} KGn/saat</small></div>
-                <button class="card-btn" ${isOwned ? 'disabled' : ''} onclick="buyCard('${card.id}', ${card.price}, ${card.income})">
-                    ${isOwned ? 'SAHİPSİN' : card.price + ' KGn'}
-                </button>
-            </div>`;
-    });
-}
-
-function createParticles() {
-    const container = document.getElementById('particle-container');
-    for(let i=0; i<20; i++) {
         let p = document.createElement('div');
-        p.className = 'particle';
-        p.style.left = Math.random() * 100 + 'vw';
-        p.style.top = Math.random() * 100 + 'vh';
-        p.style.width = '3px'; p.style.height = '3px';
-        p.style.animationDelay = Math.random() * 5 + 's';
-        container.appendChild(p);
+        p.className = 'plus-anim';
+        p.innerText = "+" + state.tapPower;
+        p.style.left = e.clientX + 'px'; p.style.top = e.clientY + 'px';
+        document.body.appendChild(p);
+        setTimeout(() => p.remove(), 600);
+        updateUI();
     }
 }
 
@@ -157,10 +132,22 @@ function showTab(tabId, el) {
     el.classList.add('active');
 }
 
+function createParticles() {
+    const cont = document.getElementById('particle-container');
+    for(let i=0; i<15; i++) {
+        let p = document.createElement('div');
+        p.className = 'particle';
+        p.style.left = Math.random()*100+'vw'; p.style.top = Math.random()*100+'vh';
+        p.style.width = '2px'; p.style.height = '2px';
+        p.style.animationDelay = Math.random()*5+'s';
+        cont.appendChild(p);
+    }
+}
+
 function save() {
     state.lastUpdate = Date.now();
-    localStorage.setItem('kgn_pro_v1', JSON.stringify(state));
+    localStorage.setItem('kgn_v6_final', JSON.stringify(state));
 }
 
 window.onload = init;
-                 
+              
