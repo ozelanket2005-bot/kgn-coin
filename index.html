@@ -7,29 +7,38 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="game-container">
-        <div class="header">
+    <div id="hourly-rate-container">
+        <span class="label">Saatlik:</span>
+        <span id="hourly-rate">0</span>
+    </div>
+
+    <div id="game-page" class="page active">
+        <div class="balance-section">
+            <span id="balance">0</span> <span class="currency">KGn</span>
             <div id="user-rank">Çaylak</div>
-            <div class="balance-container">
-                <span id="balance">0</span> <span class="currency">KGn</span>
-            </div>
-            <div id="hourly-rate">Saatlik: +0</div>
         </div>
+
         <div class="coin-container">
-          <div id="kgn-chip" style="font-size: 150px; cursor: pointer; user-select: none;">🪙</div>
-            
+            <img src="coin.png" id="kgn-chip" alt="coin">
         </div>
-        <div class="footer">
-            <div class="energy-container">
-                <div class="energy-bar">
-                    <div id="energy-fill"></div>
-                </div>
-                <div id="energy-text">500/500</div>
+
+        <div class="energy-section">
+            <div class="energy-bar">
+                <div id="energy-fill"></div>
             </div>
+            <div id="energy-text">500/500</div>
         </div>
     </div>
+
+    <nav class="bottom-nav">
+        <div class="nav-item" onclick="showPage('game-page')">🪙 Oyun</div>
+        <div class="nav-item" onclick="showPage('mine-page')">⚒️ Borsa</div>
+        <div class="nav-item" onclick="showPage('tasks-page')">📋 Görevler</div>
+    </nav>
+
+    <div id="mine-page" class="page"><h2>Borsa</h2></div>
+    <div id="tasks-page" class="page"><h2>Görevler</h2></div>
+
     <script src="script.js"></script>
 </body>
 </html>
-
-l
