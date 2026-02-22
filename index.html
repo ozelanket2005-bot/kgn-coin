@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KGn Coin Elite</title>
+    <title>KGn Elite Pro</title>
     <script src="https://sad.adsgram.ai/js/adstg.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -11,18 +11,18 @@
     <div id="particle-container"></div>
 
     <div class="top-stats">
-        <div class="stat-item">
+        <div class="stat-box">
             <small>SAATLİK KAZANÇ</small>
-            <div id="hourly-display" style="color: #ffd700; font-weight: bold;">+0 KGn</div>
+            <div id="hourly-display">+0 KGn</div>
         </div>
-        <div class="stat-item" style="text-align: right;">
+        <div class="stat-box" style="text-align: right;">
             <small>LİG</small>
             <div style="color: #ffd700;">ELITE</div>
         </div>
     </div>
 
     <div id="balance-container">
-        <span id="balance-text" style="color: white;">0</span> <span style="color: #ffd700;">KGn</span>
+        <span id="balance-text">0</span> <span style="color: #ffd700;">KGn</span>
     </div>
 
     <div id="game-tab" class="tab-content active">
@@ -44,48 +44,50 @@
     </div>
 
     <div id="market-tab" class="tab-content">
-        <h2 style="color:#ffd700; text-align:center;">Sanal Ofis</h2>
-        <div id="market-list"></div>
+        <h2 class="section-title">Sanal Ofis</h2>
+        <div id="market-list" class="scroll-area"></div>
     </div>
 
     <div id="tasks-tab" class="tab-content">
-        <h2 style="color:#ffd700; text-align:center;">Para Kazan & Ödül Al</h2>
-        
-        <div class="task-section">
-            <div class="task-card">
-                <div class="task-details">
+        <h2 class="section-title">Para Kazan & Ödül Al</h2>
+        <div class="scroll-area">
+            <div class="pro-task-card">
+                <div class="task-icon">💰</div>
+                <div class="task-info">
                     <strong>Hızlı KGn Paketi</strong>
-                    <p>Her Reklam: <span style="color:#ffd700;">+100 KGn</span></p>
+                    <span>Her Reklam: <b style="color:#ffd700">+100 KGn</b></span>
                     <small>Günlük Limit: 10 Reklam</small>
                 </div>
-                <button class="task-btn" onclick="runRewardAd('gold')">İZLE</button>
+                <button class="task-go-btn" onclick="runRewardAd('gold')">İZLE</button>
             </div>
 
-            <div class="task-card">
-                <div class="task-details">
+            <div class="pro-task-card">
+                <div class="task-icon">🚀</div>
+                <div class="task-info">
                     <strong>2x Tıklama Gücü</strong>
-                    <p>Durum: <span id="c-status">Pasif</span></p>
-                    <small>2 Reklam İzle (Hak: 3)</small>
+                    <span>Durum: <b id="c-status">Pasif</b></span>
+                    <small>2 Reklam (Kalan Hak: 3)</small>
                 </div>
-                <button class="task-btn" onclick="runRewardAd('click')">İZLE</button>
+                <button class="task-go-btn" onclick="runRewardAd('click')">İZLE</button>
             </div>
 
-            <div class="task-card">
-                <div class="task-details">
+            <div class="pro-task-card">
+                <div class="task-icon">⚡</div>
+                <div class="task-info">
                     <strong>Enerji Deposu</strong>
-                    <p>Anında <span style="color:#ffd700;">500 ⚡</span></p>
-                    <small>2 Reklam İzle (Hak: 3)</small>
+                    <span>Anında Full Enerji</span>
+                    <small>2 Reklam (Kalan Hak: 3)</small>
                 </div>
-                <button class="task-btn" onclick="runRewardAd('energy')">İZLE</button>
+                <button class="task-go-btn" onclick="runRewardAd('energy')">İZLE</button>
             </div>
         </div>
     </div>
 
     <div id="wallet-tab" class="tab-content">
-        <div style="text-align:center; margin-top:100px;">
-            <img src="https://cdn-icons-png.flaticon.com/512/2489/2489756.png" width="80" style="filter: hue-rotate(45deg);">
+        <div class="empty-state">
+            <img src="https://cdn-icons-png.flaticon.com/512/2489/2489756.png" width="60">
             <h3>Cüzdan Bağlantısı</h3>
-            <p style="color:#666">Efendim Kaan, bu özellik yakında eklenecek.</p>
+            <p>Yakında aktif edilecek Efendim Kaan.</p>
         </div>
     </div>
 
@@ -98,5 +100,4 @@
 
     <script src="script.js"></script>
 </body>
-                                                                             </html>
-                                                                             
+</html>
