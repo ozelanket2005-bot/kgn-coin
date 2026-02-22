@@ -1,25 +1,93 @@
-body { background: #000; color: #fff; font-family: sans-serif; margin: 0; overflow: hidden; }
+body { 
+    background: #000; 
+    color: #fff; 
+    font-family: sans-serif; 
+    margin: 0; 
+    overflow: hidden; 
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
 
-/* Saatlik Kazanç Sol Üst */
-#hourly-rate-container { position: absolute; top: 20px; left: 20px; color: #f3ba2f; font-weight: bold; }
+/* Saatlik Kazanç: Sol Üst */
+#hourly-rate-container { 
+    position: absolute; 
+    top: 20px; 
+    left: 20px; 
+    color: #f3ba2f; 
+    font-size: 18px;
+    font-weight: bold; 
+}
 
-/* Bakiye - Paranın Üstünde Orta Uzaklıkta */
-.balance-section { margin-top: 80px; text-align: center; }
-#balance { font-size: 45px; font-weight: bold; color: #f3ba2f; }
-#user-rank { font-size: 14px; color: #888; margin-top: 5px; }
+/* Bakiye: Paranın Üstünde ve Orta Uzaklıkta */
+.balance-section { 
+    margin-top: 100px; 
+    text-align: center; 
+}
+#balance { 
+    font-size: 50px; 
+    font-weight: bold; 
+    color: #f3ba2f; 
+    text-shadow: 0 0 10px rgba(243, 186, 47, 0.5);
+}
+#user-rank { 
+    font-size: 16px; 
+    color: #888; 
+    margin-top: 10px; 
+}
 
-/* Para Tam Merkezde */
-.coin-container { display: flex; justify-content: center; align-items: center; height: 50vh; }
-.coin-container img { width: 220px; transition: transform 0.1s; }
-.coin-container img:active { transform: scale(0.95); }
+/* Para: Tam Merkezde ve Beyaz Arka Planı Gizlenmiş */
+.coin-container { 
+    flex-grow: 1;
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+}
+.coin-container img { 
+    width: 240px; 
+    border-radius: 50%; /* Kenarları yumuşatır */
+    mix-blend-mode: screen; /* Beyaz arka planı siyah zeminde gizlemeye yardımcı olur */
+    transition: transform 0.1s;
+}
+.coin-container img:active { 
+    transform: scale(0.92); 
+}
 
-/* Enerji Barı Aşağıda */
-.energy-section { position: absolute; bottom: 120px; width: 80%; left: 10%; text-align: center; }
-.energy-bar { background: #333; height: 12px; border-radius: 10px; overflow: hidden; margin-bottom: 8px; }
-#energy-fill { background: linear-gradient(90deg, #f3ba2f, #ffeb3b); height: 100%; width: 100%; transition: width 0.3s; }
-#energy-text { font-size: 16px; font-weight: bold; }
+/* Enerji Barı: Paranın Altında ve Aşağıda */
+.energy-section { 
+    margin-bottom: 120px; 
+    padding: 0 40px;
+    text-align: center; 
+}
+.energy-bar { 
+    background: #222; 
+    height: 14px; 
+    border-radius: 10px; 
+    overflow: hidden; 
+    margin-bottom: 8px; 
+    border: 1px solid #333;
+}
+#energy-fill { 
+    background: linear-gradient(90deg, #f3ba2f, #ffca28); 
+    height: 100%; 
+    width: 100%; 
+    transition: width 0.3s ease; 
+}
+#energy-text { 
+    font-size: 16px; 
+    font-weight: bold; 
+    color: #ccc;
+}
 
-.bottom-nav { position: fixed; bottom: 0; width: 100%; display: flex; background: #111; padding: 20px 0; border-top: 1px solid #333; }
-.nav-item { flex: 1; text-align: center; font-size: 14px; cursor: pointer; }
-.page { display: none; height: 100vh; }
-.page.active { display: block; }
+/* Alt Menü */
+.bottom-nav { 
+    position: fixed; 
+    bottom: 0; 
+    width: 100%; 
+    display: flex; 
+    background: #111; 
+    padding: 20px 0; 
+    border-top: 1px solid #222; 
+}
+.nav-item { flex: 1; text-align: center; font-size: 14px; cursor: pointer; color: #888; }
+.nav-item:hover { color: #f3ba2f; }
