@@ -1,155 +1,77 @@
-body {
-    background: #000;
-    color: white;
-    font-family: 'Segoe UI', sans-serif;
-    margin: 0;
-    overflow: hidden;
-    height: 100vh;
-}
+body { background: #000; color: white; font-family: sans-serif; margin: 0; overflow: hidden; height: 100vh; }
 
-/* Parıltı Efekti */
-#particle-container {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 0;
-}
-
-.particle {
-    position: absolute;
-    background: #ffd700;
-    border-radius: 50%;
-    opacity: 0;
-    animation: glowMove 4s infinite linear;
-}
-
-@keyframes glowMove {
-    0% { opacity: 0; transform: translateY(0) scale(0.5); }
-    50% { opacity: 0.6; }
-    100% { opacity: 0; transform: translateY(-200px) scale(1.2); }
-}
+#particle-container { position: absolute; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+.particle { position: absolute; background: #ffd700; border-radius: 50%; opacity: 0; animation: glowMove 3s infinite linear; }
+@keyframes glowMove { 0% { opacity: 0; transform: translateY(0); } 50% { opacity: 0.5; } 100% { opacity: 0; transform: translateY(-150px); } }
 
 /* Üst Panel */
-.top-stats {
-    display: flex;
-    justify-content: space-between;
-    padding: 15px 20px;
-    background: rgba(255, 255, 255, 0.05);
-    border-bottom: 1px solid rgba(255, 215, 0, 0.2);
-    z-index: 10;
-}
-
+.top-stats { display: flex; justify-content: space-between; padding: 15px 20px; background: #0a0a0a; border-bottom: 1px solid #222; }
 #hourly-display { color: #ffd700; font-weight: bold; }
-
-#balance-container {
-    text-align: center;
-    font-size: 40px;
-    font-weight: 900;
-    margin-top: 20px;
-}
+#balance-container { text-align: center; font-size: 42px; font-weight: 800; margin: 20px 0; }
 
 /* Orta Buton */
-.coin-wrapper {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 5;
-}
+.coin-wrapper { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+#coin-clicker { width: 240px; cursor: pointer; transition: 0.05s; }
+#coin-clicker img { width: 100%; filter: drop-shadow(0 0 20px gold); }
+#coin-clicker:active { transform: scale(0.95); }
 
-#coin-clicker {
-    width: 250px;
-    height: 250px;
-    cursor: pointer;
-    transition: transform 0.05s;
-}
+/* Görev Kartları Tasarımı */
+.scroll-area { height: 65vh; overflow-y: auto; padding-bottom: 100px; }
+.section-title { color: #ffd700; text-align: center; margin-bottom: 25px; }
 
-#coin-clicker img { width: 100%; filter: drop-shadow(0 0 30px rgba(255,215,0,0.3)); }
-
-#coin-clicker:active { transform: scale(0.94); }
-
-/* Enerji Barı Alt */
-.energy-footer {
-    position: absolute;
-    bottom: 90px;
-    width: 80%;
-    left: 10%;
-    text-align: center;
-}
-
-.energy-bar-container {
-    width: 100%;
-    height: 12px;
-    background: #222;
-    border-radius: 10px;
-    overflow: hidden;
-    border: 1px solid #333;
-}
-
-#energy-fill {
-    height: 100%;
-    width: 100%;
-    background: linear-gradient(90deg, #ffd700, #ff8c00);
-    transition: width 0.3s;
-}
-
-.energy-info {
-    display: flex;
-    justify-content: space-between;
-    font-size: 14px;
-    margin-top: 5px;
-    color: #ffd700;
-}
-
-/* Kartlar ve Sekmeler */
-.tab-content { display: none; padding: 20px; height: 70vh; overflow-y: auto; background: #000; }
-.tab-content.active { display: block; }
-
-.kgn-card {
-    background: #1a1a1a;
-    border-radius: 12px;
+.pro-task-card {
+    background: #111;
+    border: 1px solid #222;
+    border-radius: 15px;
     padding: 15px;
-    margin-bottom: 10px;
-    border: 1px solid #333;
+    margin: 0 15px 15px 15px; /* Kartlar arası boşluk burası */
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.task-icon { font-size: 24px; background: #222; padding: 10px; border-radius: 10px; }
+.task-info { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+.task-info strong { font-size: 16px; }
+.task-info span { font-size: 13px; color: #aaa; }
+.task-info small { font-size: 11px; color: #666; }
+
+.task-go-btn {
+    background: #ffd700;
+    color: #000;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Borsa Kartları */
+.market-card {
+    background: #111;
+    border-radius: 15px;
+    padding: 15px;
+    margin: 0 15px 12px 15px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-left: 4px solid #ffd700;
 }
 
-.card-btn {
-    background: #ffd700;
-    color: black;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 8px;
-    font-weight: bold;
-}
-
-.card-btn:disabled { background: #444; color: #888; }
-
-/* Menü Alt */
-.bottom-nav {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    display: flex;
-    background: #111;
-    padding: 10px 0;
-    border-top: 1px solid #222;
-}
-
-.nav-btn { flex: 1; text-align: center; color: #777; font-size: 12px; cursor: pointer; }
+/* Alt Menü */
+.bottom-nav { position: fixed; bottom: 0; width: 100%; display: flex; background: #050505; padding: 10px 0; border-top: 1px solid #111; }
+.nav-btn { flex: 1; text-align: center; color: #555; font-size: 11px; cursor: pointer; }
 .nav-btn.active { color: #ffd700; }
 
-.plus-anim {
-    position: absolute;
-    color: white;
-    font-weight: bold;
-    font-size: 24px;
-    animation: floatUp 0.7s forwards;
-    pointer-events: none;
-}
+/* Animasyonlar */
+.plus-anim { position: absolute; color: white; font-weight: bold; animation: fadeUp 0.6s forwards; pointer-events: none; }
+@keyframes fadeUp { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-80px); } }
 
-@keyframes floatUp { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-100px); } }
-  
+/* Diğer */
+.energy-footer { position: absolute; bottom: 85px; width: 80%; left: 10%; }
+.energy-bar-container { width: 100%; height: 10px; background: #222; border-radius: 5px; overflow: hidden; }
+#energy-fill { height: 100%; width: 100%; background: #ffd700; transition: 0.3s; }
+.energy-info { display: flex; justify-content: space-between; font-size: 12px; margin-top: 5px; color: #ffd700; }
+.tab-content { display: none; height: 80vh; }
+.tab-content.active { display: block; }
+                
