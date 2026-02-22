@@ -1,49 +1,77 @@
 let balance = 0;
 let energy = 500;
 const maxEnergy = 500;
-let lastClickTime = 0;
-const fiveHoursInMs = 5 * 60 * 60 * 1000;
-const fillPerSecond = maxEnergy / (5 * 60 * 60);
+const kgnPerClick = 5; // Her tıklamada 5 KGn
+const energyCost = 5; // Her tıklamada 5 enerji azalır
 
-function showPage(pageId) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById(pageId).classList.add('active');
-}
+const balanceElement = document.getElementById('balance');
+const energyText = document.getElementById('energy-text');
+const energyFill = document.getElementById('energy-fill');
+const coinButton = document.getElementById('kgn-chip');
 
-document.getElementById('kgn-chip').addEventListener('click', () => {
-    const now = Date.now();
-    // Bekleme süresi senin isteğin üzerine 50ms (0,05 saniye) yapıldı
-    if (now - lastClickTime < 50) return; 
+// Tıklama Fonksiyonu
+coinButton.addEventListener('click', (e) => {
+    if (energy >= energyCost) {
+        // Kazanç ve Enerji Azalması
+        balance += kgnPerClick;
+        energy -= energyCost;
 
-    if (energy >= 1) {
-        balance += 1;
-        energy -= 1;
-        lastClickTime = now;
-        updateDisplay();
+        // Ekranı Güncelle
+        updateUI();
+
+        // Tıklama Efekti (Opsiyonel: +5 yazısı uçsun istersen)
+        showClickAnimation(e);
+    } else {
+        alert("Enerjin bitti Efendim Kaan! Biraz dinlenmelisin.");
     }
 });
 
-function updateDisplay() {
-    document.getElementById('balance').innerText = Math.floor(balance);
-    document.getElementById('energy-text').innerText = `${Math.floor(energy)}/${maxEnergy}`;
-    document.getElementById('energy-fill').style.width = `${(energy / maxEnergy) * 100}%`;
+function updateUI() {
+    balanceElement.textContent = balance.toLocaleString(); // Bakiyeyi formatlı yazar
+    energyText.textContent = `${energy}/${maxEnergy}`;
     
-    if (energy < maxEnergy) {
-        const secondsLeft = Math.ceil((maxEnergy - energy) / fillPerSecond);
-        const h = Math.floor(secondsLeft / 3600);
-        const m = Math.floor((secondsLeft % 3600) / 60);
-        const s = secondsLeft % 60;
-        document.getElementById('energy-timer').innerText = `Dolmasına: ${h}s ${m}d ${s}sn`;
-    } else {
-        document.getElementById('energy-timer').innerText = "Enerji Dolu";
-    }
+    // Enerji barını güncelle
+    const energyPercentage = (energy / maxEnergy) * 100;
+    energyFill.style.width = `${energyPercentage}%`;
 }
 
+// Enerji Yenileme (Saniyede 1 enerji dolar)
 setInterval(() => {
     if (energy < maxEnergy) {
-        energy += fillPerSecond;
-        if (energy > maxEnergy) energy = maxEnergy;
-        updateDisplay();
+        energy++;
+        updateUI();
     }
 }, 1000);
+
+function showClickAnimation(e) {
+    const text = document.createElement('div');
+    text.textContent = `+${kgnPerClick}`;
+    text.style.position = 'absolute';
+    text.style.left = `${e.pageX}px`;
+    text.style.top = `${e.pageY}px`;
+    text.style.color = '#f3ba2f';
+    text.style.fontWeight = 'bold';
+    text.style.fontSize = '24px';
+    text.style.pointerEvents = 'none';
+    text.style.animation = 'floatUp 0.8s ease-out forwards';
     
+    document.body.appendChild(text);
+    
+    setTimeout(() => {
+        text.remove();
+    }, 800);
+}
+
+// Float Animasyonu için CSS (Eğer style.css'e eklemediysen)
+const style = document.createElement('style');
+style.innerHTML = `
+@keyframes floatUp {
+    0% { transform: translateY(0); opacity: 1; }
+    100% { transform: translateY(-100px); opacity: 0; }
+}
+`;
+document.head.appendChild(style);
+
+// İlk açılışta UI güncelle
+updateUI();
+        
