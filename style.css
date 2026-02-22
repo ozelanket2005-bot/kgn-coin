@@ -1,27 +1,34 @@
 body { background: #000; color: #fff; font-family: sans-serif; margin: 0; padding: 0; overflow: hidden; height: 100vh; display: flex; flex-direction: column; }
-#hourly-rate-container { position: fixed; top: 20px; left: 20px; color: #f3ba2f; font-weight: bold; font-size: 18px; }
-.page { display: flex; flex-direction: column; height: 100vh; width: 100%; position: relative; }
-.balance-section { margin-top: 80px; text-align: center; }
-#balance { font-size: 65px; font-weight: bold; color: #f3ba2f; }
-#user-rank { font-size: 18px; color: #888; }
 
-/* EMOJİ KONTEYNERI */
+#hourly-rate-container { position: fixed; top: 20px; left: 20px; color: #f3ba2f; font-weight: bold; font-size: 18px; z-index: 100; }
+
+.page { display: flex; flex-direction: column; height: 100vh; width: 100%; position: relative; }
+
+/* Bakiye ve Sarı KGn Yazısı Ayarı */
+.balance-section { margin-top: 80px; text-align: center; }
+#balance { font-size: 75px; font-weight: bold; color: #f3ba2f; }
+.kgn-text { font-size: 30px; font-weight: bold; color: #f3ba2f; margin-left: 5px; } /* İstediğin sarı KGn yazısı */
+#user-rank { font-size: 18px; color: #888; margin-top: -5px; }
+
+/* PARA (EMOJİ) MERKEZLEME */
 .coin-container { flex-grow: 1; display: flex; justify-content: center; align-items: center; }
 .coin-emoji { 
-    font-size: 200px; /* Emojiyi devasa yaptık */
+    font-size: 180px; 
     cursor: pointer; 
     user-select: none;
+    transition: transform 0.05s; /* 50ms hıza özel tepki */
     -webkit-tap-highlight-color: transparent;
-    transition: transform 0.05s; /* 50ms tıklama hızı tepkisi */
-    filter: drop-shadow(0 0 20px rgba(243, 186, 47, 0.4)); /* Altın ışıltısı ekler */
+    filter: drop-shadow(0 0 20px rgba(243, 186, 47, 0.4));
 }
-.coin-emoji:active { transform: scale(0.90); }
+.coin-emoji:active { transform: scale(0.92); }
 
-.energy-section { position: absolute; bottom: 100px; width: 100%; text-align: center; }
-.energy-bar { background: #222; height: 16px; width: 85%; margin: 0 auto 10px; border-radius: 10px; border: 1px solid #333; overflow: hidden; }
+/* Enerji ve Sayaç: Altta Sabit */
+.energy-section { position: absolute; bottom: 110px; width: 100%; text-align: center; }
+.energy-bar { background: #222; height: 16px; width: 85%; margin: 0 auto 8px; border-radius: 10px; border: 1px solid #333; overflow: hidden; }
 #energy-fill { background: linear-gradient(90deg, #f3ba2f, #ffca28); height: 100%; width: 100%; }
 #energy-text { font-size: 20px; font-weight: bold; }
 #energy-timer { font-size: 14px; color: #f3ba2f; margin-top: 5px; }
 
-.bottom-nav { position: fixed; bottom: 0; width: 100%; display: flex; background: #111; padding: 20px 0; border-top: 1px solid #333; z-index: 200; }
+/* Alt Menü */
+.bottom-nav { position: fixed; bottom: 0; width: 100%; display: flex; background: #111; padding: 22px 0; border-top: 1px solid #333; z-index: 200; }
 .nav-item { flex: 1; text-align: center; font-size: 16px; color: #888; }
