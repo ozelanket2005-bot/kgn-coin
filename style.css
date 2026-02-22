@@ -1,26 +1,23 @@
-body { background: #000; color: #fff; font-family: sans-serif; margin: 0; overflow: hidden; display: flex; flex-direction: column; height: 100vh; }
+body { background: #000; color: #fff; font-family: sans-serif; margin: 0; overflow: hidden; height: 100vh; }
 
-#hourly-rate-container { position: absolute; top: 20px; left: 20px; color: #f3ba2f; font-size: 18px; font-weight: bold; }
+#hourly-rate-container { position: absolute; top: 20px; left: 20px; color: #f3ba2f; font-weight: bold; font-size: 18px; }
 
-.balance-section { margin-top: 80px; text-align: center; }
-#balance { font-size: 50px; font-weight: bold; color: #f3ba2f; }
-#user-rank { font-size: 16px; color: #888; margin-top: 5px; }
+.page { display: none; height: 100vh; width: 100%; position: absolute; top: 0; }
+.page.active { display: block; }
 
-.coin-container { flex-grow: 1; display: flex; justify-content: center; align-items: center; }
-.coin-container img { 
-    width: 240px; 
-    mix-blend-mode: multiply; /* Beyaz arka planı yok etmek için en iyi yöntem */
-    filter: brightness(1.1); /* Parayı biraz daha parlak yapar */
-    transition: transform 0.1s;
-    cursor: pointer;
-}
-.coin-container img.wait { opacity: 0.5; cursor: not-allowed; } /* Tıklama bekleme süresinde soluklaşır */
+.balance-section { margin-top: 100px; text-align: center; }
+#balance { font-size: 55px; font-weight: bold; color: #f3ba2f; }
+#user-rank { font-size: 16px; color: #888; }
 
-.energy-section { margin-bottom: 110px; padding: 0 40px; text-align: center; }
-.energy-bar { background: #222; height: 14px; border-radius: 10px; overflow: hidden; margin-bottom: 8px; border: 1px solid #333; }
-#energy-fill { background: linear-gradient(90deg, #f3ba2f, #ffca28); height: 100%; width: 100%; transition: width 0.5s linear; }
-#energy-timer { font-size: 14px; color: #f3ba2f; margin-top: 5px; font-family: monospace; }
-#energy-text { font-size: 16px; font-weight: bold; color: #ccc; }
+.coin-container { display: flex; justify-content: center; align-items: center; height: 45vh; margin-top: 20px; }
+.coin-container img { width: 250px; cursor: pointer; transition: transform 0.1s; }
+.coin-container img:active { transform: scale(0.95); }
 
-.bottom-nav { position: fixed; bottom: 0; width: 100%; display: flex; background: #111; padding: 20px 0; border-top: 1px solid #222; }
-.nav-item { flex: 1; text-align: center; font-size: 14px; cursor: pointer; color: #888; }
+.energy-section { position: absolute; bottom: 120px; width: 100%; text-align: center; }
+.energy-bar { background: #222; height: 14px; width: 80%; margin: 0 auto 10px; border-radius: 10px; border: 1px solid #333; overflow: hidden; }
+#energy-fill { background: #f3ba2f; height: 100%; width: 100%; transition: width 0.5s; }
+#energy-text { font-size: 18px; font-weight: bold; }
+#energy-timer { font-size: 13px; color: #f3ba2f; margin-top: 4px; }
+
+.bottom-nav { position: fixed; bottom: 0; width: 100%; display: flex; background: #111; padding: 20px 0; border-top: 1px solid #333; z-index: 100; }
+.nav-item { flex: 1; text-align: center; cursor: pointer; font-size: 15px; color: #888; }
