@@ -1,8 +1,25 @@
-body { background-color: #000; color: #fff; text-align: center; font-family: sans-serif; margin: 0; overflow: hidden; }
-.game-container { padding: 20px; }
-.balance-container { font-size: 40px; color: #f3ba2f; margin: 10px 0; }
-.coin-container img { width: 250px; cursor: pointer; transition: transform 0.1s; }
-.coin-container img:active { transform: scale(0.95); }
-.energy-bar { background: #333; height: 15px; border-radius: 10px; margin-top: 20px; }
-#energy-fill { background: #f3ba2f; height: 100%; width: 100%; border-radius: 10px; transition: width 0.2s; }
+body { background: #000; color: #fff; font-family: sans-serif; margin: 0; overflow: hidden; }
 
+/* Saatlik Kazanç Sol Üst */
+#hourly-rate-container { position: absolute; top: 20px; left: 20px; color: #f3ba2f; font-weight: bold; }
+
+/* Bakiye - Paranın Üstünde Orta Uzaklıkta */
+.balance-section { margin-top: 80px; text-align: center; }
+#balance { font-size: 45px; font-weight: bold; color: #f3ba2f; }
+#user-rank { font-size: 14px; color: #888; margin-top: 5px; }
+
+/* Para Tam Merkezde */
+.coin-container { display: flex; justify-content: center; align-items: center; height: 50vh; }
+.coin-container img { width: 220px; transition: transform 0.1s; }
+.coin-container img:active { transform: scale(0.95); }
+
+/* Enerji Barı Aşağıda */
+.energy-section { position: absolute; bottom: 120px; width: 80%; left: 10%; text-align: center; }
+.energy-bar { background: #333; height: 12px; border-radius: 10px; overflow: hidden; margin-bottom: 8px; }
+#energy-fill { background: linear-gradient(90deg, #f3ba2f, #ffeb3b); height: 100%; width: 100%; transition: width 0.3s; }
+#energy-text { font-size: 16px; font-weight: bold; }
+
+.bottom-nav { position: fixed; bottom: 0; width: 100%; display: flex; background: #111; padding: 20px 0; border-top: 1px solid #333; }
+.nav-item { flex: 1; text-align: center; font-size: 14px; cursor: pointer; }
+.page { display: none; height: 100vh; }
+.page.active { display: block; }
