@@ -1,4 +1,4 @@
-/* Temel Sayfa Ayarları */
+/* Genel Ayarlar */
 body { 
     background: #000; 
     color: #fff; 
@@ -6,86 +6,79 @@ body {
     margin: 0; 
     padding: 0;
     overflow: hidden; 
-    height: 100vh; 
-    display: flex;
-    flex-direction: column;
+    height: 100vh;
 }
 
-/* Saatlik Kazanç: Sol Üstte */
+/* Saatlik Kazanç: Sol Üstte Sabit */
 #hourly-rate-container { 
-    position: absolute; 
-    top: 25px; 
+    position: fixed; 
+    top: 20px; 
     left: 20px; 
     color: #f3ba2f; 
     font-weight: bold; 
     font-size: 18px; 
-    z-index: 10;
+    z-index: 100;
 }
 
-/* Sayfa Yapısı */
+/* Oyun Ekranı Konumlandırması */
 .page { 
     display: none; 
     height: 100vh; 
     width: 100%; 
-    position: absolute; 
-    top: 0; 
-    box-sizing: border-box;
+    position: relative;
 }
 .page.active { 
-    display: flex;
-    flex-direction: column;
+    display: block; 
 }
 
-/* Bakiye Bölümü: Paranın Üstünde */
+/* Bakiye: Ekranın Üst Kısmında */
 .balance-section { 
-    margin-top: 60px; 
+    padding-top: 80px; 
     text-align: center; 
 }
 #balance { 
-    font-size: 65px; /* Bakiye fontunu da heybete uygun büyüttüm */
+    font-size: 70px; 
     font-weight: bold; 
     color: #f3ba2f; 
 }
 #user-rank { 
     font-size: 18px; 
     color: #888; 
-    margin-top: 5px;
 }
 
-/* ALTIN PARA: 500PX DEV BOYUT */
+/* KGn COIN: GERÇEK DEV BOYUT (500PX) */
 .coin-container { 
-    flex-grow: 1;
     display: flex; 
     justify-content: center; 
     align-items: center; 
+    height: 50vh; /* Ekranın yarısını kaplar */
+    margin-top: 20px;
 }
 .coin-container img { 
-    width: 500px; /* Senin isteğin üzerine 500px yaptık */
-    max-width: 98%; /* Ekranın kenarlarına sıfıra yakın durur */
+    width: 500px; /* İstediğin dev boyut */
+    max-width: 95%; 
     cursor: pointer; 
-    transition: transform 0.05s; /* 50ms hıza özel tepki */
+    transition: transform 0.05s; /* 50ms tıklama hızı için seri tepki */
     user-select: none;
     -webkit-tap-highlight-color: transparent;
-    display: block;
-    margin: 0 auto;
-    filter: drop-shadow(0 0 20px rgba(243, 186, 47, 0.4)); /* Daha belirgin ışıltı */
 }
 .coin-container img:active { 
-    transform: scale(0.96); /* Büyük olduğu için hafif bir esneme hissi */
+    transform: scale(0.94); 
 }
 
-/* Enerji Bölümü: Paranın Altında */
+/* Enerji Bölümü: Alt Menünün Hemen Üstünde */
 .energy-section { 
-    margin-bottom: 100px; 
+    position: absolute;
+    bottom: 100px; /* Alt menünün üstünde kalacak şekilde sabitledim */
     width: 100%; 
     text-align: center; 
 }
 .energy-bar { 
     background: #222; 
     height: 18px; 
-    width: 90%; 
-    margin: 0 auto 10px; 
-    border-radius: 15px; 
+    width: 85%; 
+    margin: 0 auto 8px; 
+    border-radius: 10px; 
     border: 1px solid #333; 
     overflow: hidden; 
 }
@@ -93,29 +86,28 @@ body {
     background: linear-gradient(90deg, #f3ba2f, #ffca28); 
     height: 100%; 
     width: 100%; 
-    transition: width 0.5s linear; 
+    transition: width 0.3s ease-out; 
 }
 #energy-text { 
-    font-size: 22px; 
+    font-size: 20px; 
     font-weight: bold; 
-    color: #fff;
 }
 #energy-timer { 
-    font-size: 15px; 
+    font-size: 14px; 
     color: #f3ba2f; 
-    margin-top: 5px; 
+    margin-top: 4px; 
 }
 
-/* Alt Menü Çubuğu: Sabit */
+/* Alt Menü Çubuğu: En Alta Sabit */
 .bottom-nav { 
     position: fixed; 
     bottom: 0; 
     width: 100%; 
     display: flex; 
     background: #111; 
-    padding: 22px 0; 
+    padding: 20px 0; 
     border-top: 1px solid #333; 
-    z-index: 100; 
+    z-index: 200; 
 }
 .nav-item { 
     flex: 1; 
