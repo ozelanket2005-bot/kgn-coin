@@ -1,22 +1,21 @@
 body { background: #000; color: #fff; font-family: sans-serif; margin: 0; padding: 0; overflow: hidden; height: 100vh; display: flex; flex-direction: column; }
-#hourly-rate-container { position: fixed; top: 20px; left: 20px; color: #f3ba2f; font-weight: bold; font-size: 18px; z-index: 100; }
+#hourly-rate-container { position: fixed; top: 20px; left: 20px; color: #f3ba2f; font-weight: bold; font-size: 18px; }
 .page { display: flex; flex-direction: column; height: 100vh; width: 100%; position: relative; }
 .balance-section { margin-top: 80px; text-align: center; }
 #balance { font-size: 65px; font-weight: bold; color: #f3ba2f; }
 #user-rank { font-size: 18px; color: #888; }
 
-/* PARA KONTEYNERI */
-.coin-container { flex-grow: 1; display: flex; justify-content: center; align-items: center; min-height: 300px; }
-.coin-container img { 
-    width: 380px; /* Görsel boyutu */
-    height: auto; 
-    display: block !important; /* Görünmeyi zorunlu kılar */
+/* EMOJİ KONTEYNERI */
+.coin-container { flex-grow: 1; display: flex; justify-content: center; align-items: center; }
+.coin-emoji { 
+    font-size: 200px; /* Emojiyi devasa yaptık */
     cursor: pointer; 
-    transition: transform 0.05s; /* 50ms hıza uygun */
     user-select: none;
     -webkit-tap-highlight-color: transparent;
+    transition: transform 0.05s; /* 50ms tıklama hızı tepkisi */
+    filter: drop-shadow(0 0 20px rgba(243, 186, 47, 0.4)); /* Altın ışıltısı ekler */
 }
-.coin-container img:active { transform: scale(0.95); }
+.coin-emoji:active { transform: scale(0.90); }
 
 .energy-section { position: absolute; bottom: 100px; width: 100%; text-align: center; }
 .energy-bar { background: #222; height: 16px; width: 85%; margin: 0 auto 10px; border-radius: 10px; border: 1px solid #333; overflow: hidden; }
