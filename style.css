@@ -1,110 +1,20 @@
-body { 
-    background: #000; 
-    color: #fff; 
-    font-family: sans-serif; 
-    margin: 0; 
-    padding: 0; 
-    overflow: hidden; 
-    height: 100vh; 
-    display: flex; 
-    flex-direction: column; 
-    position: relative; /* Noktalar için pozisyon ayarı */
-}
-
-/* YANIP SÖNEN NOKTALAR */
-#particles-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    /* Alt menü hariç tüm alanı kapsar */
-    height: calc(100% - 70px); /* Bottom-nav yüksekliği kadar eksiltiyoruz */
-    pointer-events: none; /* Tıklamaları engellemez */
-    overflow: hidden;
-    z-index: 0; /* Diğer elementlerin arkasında kalır */
-}
-
-.particle {
-    position: absolute;
-    background-color: rgba(243, 186, 47, 0.7); /* Sarı renk, hafif şeffaf */
-    border-radius: 50%;
-    animation: twinkle 4s infinite ease-in-out alternate; /* Yanıp sönme animasyonu */
-}
-
-@keyframes twinkle {
-    0% { transform: scale(0.5); opacity: 0.2; }
-    50% { transform: scale(1.0); opacity: 0.8; }
-    100% { transform: scale(0.5); opacity: 0.2; }
-}
-
-
-/* Diğer UI elemanları (Z-index ile öne çıkarıldı) */
-#hourly-rate-container { 
-    position: fixed; 
-    top: 20px; 
-    left: 20px; 
-    color: #f3ba2f; 
-    font-weight: bold; 
-    font-size: 16px; 
-    z-index: 10; /* Noktaların üstünde */
-}
-
-.page { 
-    display: flex; 
-    flex-direction: column; 
-    height: 100vh; 
-    width: 100%; 
-    align-items: center; 
-    position: relative; 
-    z-index: 1; /* Noktaların üstünde */
-}
-
-.balance-section { margin-top: 60px; text-align: center; z-index: 10; }
+body { background: #000; color: #fff; font-family: sans-serif; margin: 0; padding: 0; overflow: hidden; height: 100vh; display: flex; flex-direction: column; position: relative; }
+#particles-container { position: absolute; top: 0; left: 0; width: 100%; height: calc(100% - 80px); pointer-events: none; overflow: hidden; z-index: 0; }
+.particle { position: absolute; background-color: rgba(243, 186, 47, 0.6); border-radius: 50%; animation: twinkle 4s infinite ease-in-out alternate; }
+@keyframes twinkle { 0% { transform: scale(0.5); opacity: 0.1; } 50% { transform: scale(1.2); opacity: 0.7; } 100% { transform: scale(0.5); opacity: 0.1; } }
+#hourly-rate-container { position: fixed; top: 20px; left: 20px; color: #f3ba2f; font-weight: bold; z-index: 10; }
+.page { display: flex; flex-direction: column; height: 100vh; align-items: center; z-index: 1; }
+.balance-section { margin-top: 50px; text-align: center; }
 #balance { font-size: 65px; font-weight: bold; color: #f3ba2f; }
-.kgn-yellow { font-size: 30px; font-weight: bold; color: #f3ba2f; margin-left: 8px; }
-#user-rank { color: #888; margin-top: -5px; }
-
-/* COIN BUTONU: Küçültülmüş ve Ortalanmış (Z-index ile öne çıkarıldı) */
-.coin-container { 
-    flex-grow: 1; 
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-    margin-top: -20px; 
-    z-index: 10; /* Noktaların üstünde */
-}
-#kgn-chip { 
-    width: 220px; 
-    height: auto; 
-    cursor: pointer; 
-    transition: transform 0.05s; 
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
-}
+.kgn-yellow { font-size: 30px; font-weight: bold; color: #f3ba2f; margin-left: 5px; }
+#user-rank { color: #888; font-size: 16px; margin-top: -5px; }
+.coin-container { flex-grow: 1; display: flex; justify-content: center; align-items: center; margin-top: -30px; }
+#kgn-chip { width: 220px; height: auto; cursor: pointer; transition: transform 0.05s; -webkit-tap-highlight-color: transparent; }
 #kgn-chip:active { transform: scale(0.92); }
-
-/* ENERJİ BÖLÜMÜ: Butonun hemen altında (Z-index ile öne çıkarıldı) */
-.energy-section { 
-    width: 100%; 
-    text-align: center; 
-    margin-bottom: 120px; 
-    z-index: 10; /* Noktaların üstünde */
-}
+.energy-section { width: 100%; text-align: center; margin-bottom: 110px; }
 .energy-bar { background: #222; height: 12px; width: 80%; margin: 0 auto 8px; border-radius: 10px; overflow: hidden; border: 1px solid #333; }
-#energy-fill { background: linear-gradient(90deg, #f3ba2f, #ffca28); height: 100%; width: 100%; transition: width 0.2s; }
+#energy-fill { background: linear-gradient(90deg, #f3ba2f, #ffca28); height: 100%; width: 100%; transition: width 0.3s; }
 #energy-text { font-size: 20px; font-weight: bold; }
-#energy-timer { font-size: 14px; color: #f3ba2f; margin-top: 4px; }
-
-/* Alt Menü: Noktaların Üstünde ve Ayrı */
-.bottom-nav { 
-    position: fixed; 
-    bottom: 0; 
-    width: 100%; 
-    display: flex; 
-    background: #111; 
-    padding: 20px 0; 
-    border-top: 1px solid #333; 
-    z-index: 100; /* Noktaların ve diğer her şeyin üstünde */
-}
-.nav-item { flex: 1; text-align: center; color: #888; font-size: 16px; }
-             
+#energy-timer { font-size: 14px; color: #f3ba2f; margin-top: 5px; font-weight: bold; }
+.bottom-nav { position: fixed; bottom: 0; width: 100%; display: flex; background: #111; padding: 20px 0; border-top: 1px solid #333; z-index: 100; }
+.nav-item { flex: 1; text-align: center; color: #888; font-size: 14px; }
