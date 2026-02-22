@@ -13,7 +13,7 @@
     <div class="top-stats">
         <div class="stat-item">
             <small>SAATLİK KAZANÇ</small>
-            <div id="hourly-display">+0 KGn</div>
+            <div id="hourly-display" style="color: #ffd700; font-weight: bold;">+0 KGn</div>
         </div>
         <div class="stat-item" style="text-align: right;">
             <small>LİG</small>
@@ -22,13 +22,13 @@
     </div>
 
     <div id="balance-container">
-        <span id="balance-text">0</span> <span style="color: #ffd700;">KGn</span>
+        <span id="balance-text" style="color: white;">0</span> <span style="color: #ffd700;">KGn</span>
     </div>
 
     <div id="game-tab" class="tab-content active">
         <div class="coin-wrapper">
             <div id="coin-clicker" onclick="handleTap(event)">
-                <img src="coin.png" alt="KGn" onerror="this.src='https://cdn-icons-png.flaticon.com/512/217/217853.png'">
+                <img src="coin.png" alt="KGn" onerror="this.src='https://i.ibb.co/v4m6m6S/kgn-coin.png'">
             </div>
         </div>
         
@@ -44,33 +44,48 @@
     </div>
 
     <div id="market-tab" class="tab-content">
-        <h2 class="tab-title">Sanal Ofis (Borsa)</h2>
+        <h2 style="color:#ffd700; text-align:center;">Sanal Ofis</h2>
         <div id="market-list"></div>
     </div>
 
     <div id="tasks-tab" class="tab-content">
-        <h2 class="tab-title">Görevler</h2>
-        <div class="task-card">
-            <div class="task-info">
-                <strong>2x Tıklama (2 Reklam)</strong>
-                <small id="c-task-status">Kalan Hak: 3</small>
+        <h2 style="color:#ffd700; text-align:center;">Para Kazan & Ödül Al</h2>
+        
+        <div class="task-section">
+            <div class="task-card">
+                <div class="task-details">
+                    <strong>Hızlı KGn Paketi</strong>
+                    <p>Her Reklam: <span style="color:#ffd700;">+100 KGn</span></p>
+                    <small>Günlük Limit: 10 Reklam</small>
+                </div>
+                <button class="task-btn" onclick="runRewardAd('gold')">İZLE</button>
             </div>
-            <button class="task-btn" onclick="startAdTask('click')">İZLE</button>
-        </div>
-        <div class="task-card">
-            <div class="task-info">
-                <strong>Enerji Full (2 Reklam)</strong>
-                <small id="e-task-status">Kalan Hak: 3</small>
+
+            <div class="task-card">
+                <div class="task-details">
+                    <strong>2x Tıklama Gücü</strong>
+                    <p>Durum: <span id="c-status">Pasif</span></p>
+                    <small>2 Reklam İzle (Hak: 3)</small>
+                </div>
+                <button class="task-btn" onclick="runRewardAd('click')">İZLE</button>
             </div>
-            <button class="task-btn" onclick="startAdTask('energy')">İZLE</button>
+
+            <div class="task-card">
+                <div class="task-details">
+                    <strong>Enerji Deposu</strong>
+                    <p>Anında <span style="color:#ffd700;">500 ⚡</span></p>
+                    <small>2 Reklam İzle (Hak: 3)</small>
+                </div>
+                <button class="task-btn" onclick="runRewardAd('energy')">İZLE</button>
+            </div>
         </div>
     </div>
 
     <div id="wallet-tab" class="tab-content">
-        <div class="wallet-placeholder">
-            <img src="https://cdn-icons-png.flaticon.com/512/2489/2489756.png" width="80">
+        <div style="text-align:center; margin-top:100px;">
+            <img src="https://cdn-icons-png.flaticon.com/512/2489/2489756.png" width="80" style="filter: hue-rotate(45deg);">
             <h3>Cüzdan Bağlantısı</h3>
-            <p>Henüz gelmedi, lütfen bekleyiniz.</p>
+            <p style="color:#666">Efendim Kaan, bu özellik yakında eklenecek.</p>
         </div>
     </div>
 
@@ -83,4 +98,5 @@
 
     <script src="script.js"></script>
 </body>
-</html>
+                                                                             </html>
+                                                                             
