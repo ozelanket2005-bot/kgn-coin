@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KGn Coin - Official</title>
+    <title>KGn Coin - Professional</title>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
     <link rel="stylesheet" href="style.css">
@@ -20,6 +20,7 @@
             <div id="balance-container">
                 <span id="balance">0</span> <span class="kgn-yellow">KGn</span>
             </div>
+            <div id="multiplier-badge" style="display:none">2X AKTİF!</div>
             <div id="user-rank">Çaylak</div>
         </div>
         <div class="coin-container">
@@ -39,7 +40,28 @@
 
     <div id="tasks-page" class="page">
         <h2 class="page-title">Görevler</h2>
-        <p class="empty-msg">Yeni görevler çok yakında!</p>
+        <div class="tasks-container" id="tasks-list">
+            <div class="task-card">
+                <h3>📺 Reklam İzle Kazan</h3>
+                <p>10 Reklam izle, reklam başı 100 KGn kazan!</p>
+                <div id="ad-kazan-info">Kalan Hak: 10/10</div>
+                <button class="buy-btn" id="btn-ad-kazan" onclick="startAd('kazan')">İzle (100 KGn)</button>
+            </div>
+
+            <div class="task-card">
+                <h3>⚡ Enerji Fullle</h3>
+                <p>2 Reklam izle, enerjini tamamen doldur!</p>
+                <div id="ad-energy-info">Kalan Hak: 3/3</div>
+                <button class="buy-btn" id="btn-ad-energy" onclick="startAd('energy')">İzle (0/2)</button>
+            </div>
+
+            <div class="task-card">
+                <h3>🚀 2X Tıklama Gücü</h3>
+                <p>2 Reklam izle, 10 dakika boyunca 2 kat kazan!</p>
+                <div id="ad-x2-info">Kalan Hak: 3/3</div>
+                <button class="buy-btn" id="btn-ad-x2" onclick="startAd('x2')">İzle (0/2)</button>
+            </div>
+        </div>
     </div>
 
     <nav class="bottom-nav">
