@@ -2,64 +2,41 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KGn Coin - Tıkla Kazan</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>KGn Coin Elite</title>
     <script src="https://sad.adsgram.ai/js/adstg.js"></script>
     <style>
-        body {
-            background-color: #1a1a1a;
-            color: white;
-            font-family: 'Arial', sans-serif;
-            text-align: center;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            overflow: hidden;
-        }
-        #coin {
-            width: 200px;
-            cursor: pointer;
-            transition: transform 0.1s;
-            user-select: none;
-        }
-        #coin:active {
-            transform: scale(0.9);
-        }
-        .stats {
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
-        .ad-button {
-            background: linear-gradient(45deg, #ff9900, #ffcc00);
-            color: black;
-            border: none;
-            padding: 15px 30px;
-            font-size: 18px;
-            font-weight: bold;
-            border-radius: 50px;
-            cursor: pointer;
-            margin-top: 20px;
-            box-shadow: 0 4px 15px rgba(255, 153, 0, 0.4);
-        }
-        .ad-button:active {
-            transform: scale(0.95);
-        }
+        body { background: radial-gradient(circle, #1e1e1e 0%, #000000 100%); color: white; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; justify-content: space-between; height: 100vh; overflow: hidden; }
+        .header { margin-top: 20px; background: rgba(255, 255, 255, 0.1); padding: 15px 30px; border-radius: 20px; backdrop-filter: blur(10px); border: 1px solid rgba(255, 215, 0, 0.3); }
+        .score-title { font-size: 14px; color: #ffd700; text-transform: uppercase; letter-spacing: 2px; }
+        #score { font-size: 42px; font-weight: bold; text-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
+        .coin-container { flex-grow: 1; display: flex; align-items: center; justify-content: center; }
+        #coin { width: 250px; cursor: pointer; transition: transform 0.05s ease; filter: drop-shadow(0 0 30px rgba(255, 215, 0, 0.2)); user-select: none; -webkit-tap-highlight-color: transparent; }
+        #coin:active { transform: scale(0.92); }
+        .footer-menu { width: 100%; padding-bottom: 30px; display: flex; flex-direction: column; gap: 15px; align-items: center; }
+        .ad-btn { background: linear-gradient(90deg, #ffd700, #ff8c00); color: black; border: none; padding: 12px 40px; border-radius: 12px; font-weight: bold; font-size: 16px; cursor: pointer; box-shadow: 0 4px 15px rgba(255, 140, 0, 0.3); }
+        .nav-bar { display: flex; gap: 20px; }
+        .nav-item { color: #888; text-decoration: none; font-size: 12px; }
     </style>
 </head>
 <body>
-
-    <div class="stats">
-        KGn Balance: <span id="score">0</span>
+    <div class="header">
+        <div class="score-title">KGn Balance</div>
+        <div id="score">0</div>
     </div>
 
-    <img src="https://i.ibb.co/L6M7m9G/coin.png" id="coin" alt="KGn Coin">
+    <div class="coin-container">
+        <img src="coin.png" id="coin" onerror="this.src='https://cdn-icons-png.flaticon.com/512/217/217853.png'">
+    </div>
 
-    <button class="ad-button" onclick="izleVeKazan()">
-        📺 Reklam İzle (500 KGn)
-    </button>
+    <div class="footer-menu">
+        <button class="ad-btn" onclick="izleVeKazan()">📺 REKLAM İZLE (+500 KGn)</button>
+        <div class="nav-bar">
+            <span class="nav-item">🏆 SIRALAMA</span>
+            <span class="nav-item">💼 CÜZDAN</span>
+            <span class="nav-item">⚙️ AYARLAR</span>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
