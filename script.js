@@ -8,7 +8,7 @@ let state = JSON.parse(localStorage.getItem('kgn_v7_final')) || {
     ads: { gold: 0, click: 0, energy: 0 }
 };
 
-const AdController = window.Adsgram ? window.Adsgram.init({ blockId: "23508" }) : null;
+const AdController = window.Adsgram ? window.Adsgram.init({ blockId: "23517" }) : null;
 
 const borsaKartlari = [
     { id: 'ym', name: 'Yazılım Mühendisi', price: 5000, income: 1000 },
