@@ -1,34 +1,120 @@
-body { background: #000; color: #fff; font-family: sans-serif; margin: 0; padding: 0; overflow: hidden; height: 100vh; display: flex; flex-direction: column; }
+/* Genel Sayfa Ayarları */
+body { 
+    background: #000; 
+    color: #fff; 
+    font-family: sans-serif; 
+    margin: 0; 
+    padding: 0;
+    overflow: hidden; 
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
 
-#hourly-rate-container { position: fixed; top: 20px; left: 20px; color: #f3ba2f; font-weight: bold; font-size: 18px; z-index: 100; }
+/* 1. Saatlik Kazanç: Sol Üst */
+#hourly-rate-container { 
+    position: fixed; 
+    top: 20px; 
+    left: 20px; 
+    color: #f3ba2f; 
+    font-weight: bold; 
+    font-size: 18px; 
+    z-index: 1000;
+}
 
-.page { display: flex; flex-direction: column; height: 100vh; width: 100%; position: relative; }
+.page { 
+    display: flex; 
+    flex-direction: column;
+    height: 100vh;
+    width: 100%;
+    position: relative;
+}
 
-/* Bakiye ve Sarı KGn Yazısı Ayarı */
-.balance-section { margin-top: 80px; text-align: center; }
-#balance { font-size: 75px; font-weight: bold; color: #f3ba2f; }
-.kgn-text { font-size: 30px; font-weight: bold; color: #f3ba2f; margin-left: 5px; } /* İstediğin sarı KGn yazısı */
-#user-rank { font-size: 18px; color: #888; margin-top: -5px; }
+/* 2. Bakiye ve SARI KGn Yazısı */
+.balance-section { 
+    margin-top: 60px; /* Biraz daha yukarı çektik */
+    text-align: center; 
+}
+#balance { 
+    font-size: 70px; 
+    font-weight: bold; 
+    color: #f3ba2f; 
+}
+.kgn-yellow { 
+    font-size: 30px; 
+    font-weight: bold; 
+    color: #f3ba2f; 
+    margin-left: 8px; 
+}
+#user-rank { 
+    font-size: 18px; 
+    color: #888; 
+    margin-top: -5px;
+}
 
-/* PARA (EMOJİ) MERKEZLEME */
-.coin-container { flex-grow: 1; display: flex; justify-content: center; align-items: center; }
+/* 3. ALTIN PARA: BİRAZ YUKARI KAYDIRILMIŞ */
+.coin-container { 
+    flex-grow: 1; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    padding-bottom: 40px; /* Parayı enerji barından yukarı iter */
+}
 .coin-emoji { 
     font-size: 180px; 
     cursor: pointer; 
     user-select: none;
-    transition: transform 0.05s; /* 50ms hıza özel tepki */
+    transition: transform 0.05s; 
     -webkit-tap-highlight-color: transparent;
-    filter: drop-shadow(0 0 20px rgba(243, 186, 47, 0.4));
+    filter: drop-shadow(0 0 25px rgba(243, 186, 47, 0.4));
 }
 .coin-emoji:active { transform: scale(0.92); }
 
-/* Enerji ve Sayaç: Altta Sabit */
-.energy-section { position: absolute; bottom: 110px; width: 100%; text-align: center; }
-.energy-bar { background: #222; height: 16px; width: 85%; margin: 0 auto 8px; border-radius: 10px; border: 1px solid #333; overflow: hidden; }
-#energy-fill { background: linear-gradient(90deg, #f3ba2f, #ffca28); height: 100%; width: 100%; }
-#energy-text { font-size: 20px; font-weight: bold; }
-#energy-timer { font-size: 14px; color: #f3ba2f; margin-top: 5px; }
+/* 4. Enerji ve Sayaç: Aşağıda Net Görünür */
+.energy-section { 
+    position: absolute;
+    bottom: 120px; /* Menünün üstünde, paranın altında sabitlendi */
+    width: 100%; 
+    text-align: center; 
+}
+.energy-bar { 
+    background: #222; 
+    height: 14px; 
+    width: 85%; 
+    margin: 0 auto 10px; 
+    border-radius: 10px; 
+    border: 1px solid #333; 
+    overflow: hidden; 
+}
+#energy-fill { 
+    background: linear-gradient(90deg, #f3ba2f, #ffca28); 
+    height: 100%; 
+    width: 100%; 
+}
+#energy-text { 
+    font-size: 20px; 
+    font-weight: bold; 
+}
+#energy-timer { 
+    font-size: 14px; 
+    color: #f3ba2f; 
+    margin-top: 5px; 
+}
 
-/* Alt Menü */
-.bottom-nav { position: fixed; bottom: 0; width: 100%; display: flex; background: #111; padding: 22px 0; border-top: 1px solid #333; z-index: 200; }
-.nav-item { flex: 1; text-align: center; font-size: 16px; color: #888; }
+/* 5. Alt Menü: En Alta Sabit */
+.bottom-nav { 
+    position: fixed; 
+    bottom: 0; 
+    width: 100%; 
+    display: flex; 
+    background: #111; 
+    padding: 20px 0; 
+    border-top: 1px solid #333; 
+    z-index: 2000;
+}
+.nav-item { 
+    flex: 1; 
+    text-align: center; 
+    font-size: 16px; 
+    color: #888; 
+}
