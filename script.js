@@ -12,8 +12,8 @@ function showPage(pageId) {
 
 document.getElementById('kgn-chip').addEventListener('click', () => {
     const now = Date.now();
-    // Bekleme süresini senin isteğin üzerine 0,5 saniye (500ms) yaptık
-    if (now - lastClickTime < 500) return; 
+    // Bekleme süresi senin isteğin üzerine 0,2 saniye (200ms) yapıldı
+    if (now - lastClickTime < 200) return; 
 
     if (energy >= 1) {
         balance += 1;
@@ -46,4 +46,3 @@ setInterval(() => {
         updateDisplay();
     }
 }, 1000);
-            
