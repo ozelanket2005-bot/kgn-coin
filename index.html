@@ -10,36 +10,43 @@
 </head>
 <body>
 
-    <div id="hourly-rate-container">Saatlik: <span id="hourly-rate">+0</span></div>
+    <div id="top-info">
+        <div class="info-box">Saatlik: <span id="hourly-rate" class="kgn-yellow">+0</span></div>
+    </div>
 
     <div id="game-page" class="page active">
         <div id="particles-container"></div>
-
         <div class="balance-section">
             <div id="balance-container">
-                <span id="balance">0</span> 
-                <span class="kgn-yellow">KGn</span>
+                <span id="balance">0</span> <span class="kgn-yellow">KGn</span>
             </div>
             <div id="user-rank">Çaylak</div>
         </div>
-
         <div class="coin-container">
             <img src="coin.png" id="kgn-chip" alt="KGn Coin">
         </div>
-
         <div class="energy-section">
-            <div class="energy-bar">
-                <div id="energy-fill"></div>
-            </div>
+            <div class="energy-bar"><div id="energy-fill"></div></div>
             <div id="energy-text">500/500</div>
-            <div id="energy-timer">Veriler Yükleniyor...</div>
+            <div id="energy-timer">Enerji Dolu</div>
         </div>
     </div>
 
+    <div id="exchange-page" class="page">
+        <h2 class="page-title">Yatırım Kartları</h2>
+        <div class="cards-grid" id="cards-container">
+            </div>
+    </div>
+
+    <div id="tasks-page" class="page">
+        <h2 class="page-title">Görevler</h2>
+        <p class="empty-msg">Henüz yeni görev bulunmuyor...</p>
+    </div>
+
     <nav class="bottom-nav">
-        <div class="nav-item">🪙 Oyun</div>
-        <div class="nav-item">⚒️ Borsa</div>
-        <div class="nav-item">📋 Görevler</div>
+        <div class="nav-item active" onclick="showPage('game-page')">🪙 Oyun</div>
+        <div class="nav-item" onclick="showPage('exchange-page')">⚒️ Borsa</div>
+        <div class="nav-item" onclick="showPage('tasks-page')">📋 Görevler</div>
         <div class="nav-item" id="wallet-btn">👛 Cüzdan</div>
     </nav>
 
