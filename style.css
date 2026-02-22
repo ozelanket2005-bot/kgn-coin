@@ -1,152 +1,49 @@
-body { 
-    background: #000; 
-    color: #fff; 
-    font-family: sans-serif; 
-    margin: 0; 
-    padding: 0; 
-    overflow: hidden; 
-    height: 100vh; 
-    display: flex; 
-    flex-direction: column; 
-    position: relative; 
-}
+body { background: #000; color: #fff; font-family: sans-serif; margin: 0; padding: 0; overflow: hidden; height: 100vh; display: flex; flex-direction: column; }
 
-/* Yanıp Sönen Sarı Noktalar */
-#particles-container { 
-    position: absolute; 
-    top: 0; 
-    left: 0; 
-    width: 100%; 
-    height: calc(100% - 80px); 
-    pointer-events: none; 
-    overflow: hidden; 
-    z-index: 0; 
-}
-.particle { 
-    position: absolute; 
-    background-color: rgba(243, 186, 47, 0.6); 
-    border-radius: 50%; 
-    animation: twinkle 4s infinite ease-in-out alternate; 
-}
-@keyframes twinkle { 
-    0% { transform: scale(0.5); opacity: 0.1; } 
-    50% { transform: scale(1.2); opacity: 0.7; } 
-    100% { transform: scale(0.5); opacity: 0.1; } 
-}
+/* Sayfa Yönetimi */
+.page { display: none; flex-direction: column; height: 100vh; align-items: center; overflow-y: auto; padding-bottom: 100px; box-sizing: border-box; }
+.page.active { display: flex; }
 
-#hourly-rate-container { 
-    position: fixed; 
-    top: 20px; 
-    left: 20px; 
-    color: #f3ba2f; 
-    font-weight: bold; 
-    z-index: 10; 
-}
+/* Üst Panel */
+#top-info { position: fixed; top: 15px; width: 100%; display: flex; justify-content: center; z-index: 100; }
+.info-box { background: rgba(34, 34, 34, 0.8); padding: 8px 20px; border-radius: 20px; border: 1px solid #f3ba2f; font-weight: bold; }
 
-.page { 
-    display: flex; 
-    flex-direction: column; 
-    height: 100vh; 
-    align-items: center; 
-    z-index: 1; 
-}
+/* Oyun Sayfası Elemanları */
+#particles-container { position: absolute; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+.particle { position: absolute; background-color: rgba(243, 186, 47, 0.4); border-radius: 50%; animation: twinkle 4s infinite alternate; }
+@keyframes twinkle { 0% { opacity: 0.1; } 100% { opacity: 0.6; } }
 
-.balance-section { 
-    margin-top: 50px; 
-    text-align: center; 
-}
-#balance { 
-    font-size: 65px; 
-    font-weight: bold; 
-    color: #f3ba2f; 
-}
-.kgn-yellow { 
-    font-size: 30px; 
-    font-weight: bold; 
-    color: #f3ba2f; 
-    margin-left: 5px; 
-}
-#user-rank { 
-    color: #888; 
-    font-size: 16px; 
-    margin-top: -5px; 
-}
+.balance-section { margin-top: 80px; text-align: center; z-index: 1; }
+#balance { font-size: 55px; font-weight: bold; color: #f3ba2f; }
+.kgn-yellow { color: #f3ba2f; }
 
 /* Coin Butonu */
-.coin-container { 
-    flex-grow: 1; 
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-    margin-top: -30px; 
-}
-#kgn-chip { 
-    width: 220px; 
-    height: auto; 
-    cursor: pointer; 
-    transition: transform 0.05s; 
-    -webkit-tap-highlight-color: transparent; 
-}
-#kgn-chip:active { 
-    transform: scale(0.92); 
-}
+.coin-container { flex-grow: 1; display: flex; justify-content: center; align-items: center; z-index: 1; }
+#kgn-chip { width: 230px; transition: transform 0.05s; -webkit-tap-highlight-color: transparent; }
+#kgn-chip:active { transform: scale(0.92); }
 
-/* Enerji Tasarımı */
-.energy-section { 
-    width: 100%; 
-    text-align: center; 
-    margin-bottom: 110px; 
-}
-.energy-bar { 
-    background: #222; 
-    height: 12px; 
-    width: 80%; 
-    margin: 0 auto 8px; 
-    border-radius: 10px; 
-    overflow: hidden; 
-    border: 1px solid #333; 
-}
-#energy-fill { 
-    background: linear-gradient(90deg, #f3ba2f, #ffca28); 
-    height: 100%; 
-    width: 100%; 
-    transition: width 0.3s; 
-}
-#energy-text { font-size: 20px; font-weight: bold; }
-#energy-timer { font-size: 14px; color: #f3ba2f; margin-top: 5px; font-weight: bold; }
+/* Borsa Kartları Tasarımı */
+.page-title { margin-top: 80px; color: #f3ba2f; text-shadow: 0 0 10px rgba(243, 186, 47, 0.5); }
+.cards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; width: 100%; box-sizing: border-box; }
+.card { background: #1a1a1a; border: 1px solid #333; border-radius: 15px; padding: 15px; text-align: center; transition: 0.3s; }
+.card.owned { border-color: #4CAF50; opacity: 0.8; }
+.card h3 { margin: 10px 0; font-size: 14px; }
+.card p { font-size: 12px; color: #888; margin: 5px 0; }
+.card-profit { color: #4CAF50; font-weight: bold; }
+.buy-btn { background: #f3ba2f; color: #000; border: none; padding: 8px 0; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+.buy-btn:disabled { background: #444; color: #888; cursor: not-allowed; }
+
+/* Enerji */
+.energy-section { width: 85%; text-align: center; margin-bottom: 120px; z-index: 1; }
+.energy-bar { background: #222; height: 10px; border-radius: 10px; overflow: hidden; border: 1px solid #333; margin-bottom: 5px; }
+#energy-fill { background: linear-gradient(90deg, #f3ba2f, #ffca28); height: 100%; width: 100%; transition: width 0.3s; }
 
 /* Alt Menü */
-.bottom-nav { 
-    position: fixed; 
-    bottom: 0; 
-    width: 100%; 
-    display: flex; 
-    background: #111; 
-    padding: 20px 0; 
-    border-top: 1px solid #333; 
-    z-index: 100; 
-}
-.nav-item { 
-    flex: 1; 
-    text-align: center; 
-    color: #888; 
-    font-size: 12px; 
-    cursor: pointer;
-}
+.bottom-nav { position: fixed; bottom: 0; width: 100%; display: flex; background: #111; padding: 15px 0; border-top: 1px solid #333; z-index: 1000; }
+.nav-item { flex: 1; text-align: center; color: #888; font-size: 12px; cursor: pointer; }
+.nav-item.active { color: #f3ba2f; }
 
-/* +5 Tıklama Animasyonu */
-.plus-animation {
-    position: absolute;
-    color: #f3ba2f; 
-    font-size: 28px;
-    font-weight: bold;
-    pointer-events: none;
-    z-index: 200;
-    animation: floatUp 0.8s ease-out forwards;
-    text-shadow: 0 0 10px rgba(243, 186, 47, 0.8);
-}
-@keyframes floatUp {
-    0% { transform: translateY(0); opacity: 1; }
-    100% { transform: translateY(-120px); opacity: 0; }
-    }
-    
+/* +5 Animasyonu */
+.plus-animation { position: absolute; color: #f3ba2f; font-size: 28px; font-weight: bold; pointer-events: none; z-index: 2000; animation: floatUp 0.8s ease-out forwards; }
+@keyframes floatUp { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-100px); opacity: 0; } }
+      
