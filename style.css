@@ -1,38 +1,38 @@
 body { background: #000; color: #fff; font-family: sans-serif; margin: 0; padding: 0; overflow: hidden; height: 100vh; display: flex; flex-direction: column; }
-.page { display: none; flex-direction: column; height: 100vh; align-items: center; overflow-y: auto; padding-bottom: 100px; box-sizing: border-box; }
+.page { display: none; flex-direction: column; height: 100vh; align-items: center; overflow-y: auto; padding-bottom: 120px; box-sizing: border-box; width: 100%; }
 .page.active { display: flex; }
 
 #top-info { position: fixed; top: 15px; width: 100%; display: flex; justify-content: center; z-index: 100; }
-.info-box { background: rgba(34, 34, 34, 0.8); padding: 8px 20px; border-radius: 20px; border: 1px solid #f3ba2f; font-weight: bold; }
+.info-box { background: rgba(34, 34, 34, 0.9); padding: 8px 20px; border-radius: 20px; border: 1px solid #f3ba2f; font-weight: bold; }
 
 #particles-container { position: absolute; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
 .particle { position: absolute; background-color: rgba(243, 186, 47, 0.4); border-radius: 50%; animation: twinkle 4s infinite alternate; }
 @keyframes twinkle { 0% { opacity: 0.1; } 100% { opacity: 0.6; } }
 
-.balance-section { margin-top: 80px; text-align: center; z-index: 1; }
+.balance-section { margin-top: 80px; text-align: center; z-index: 1; position: relative; }
 #balance { font-size: 55px; font-weight: bold; color: #f3ba2f; }
+#multiplier-badge { background: red; color: white; padding: 2px 10px; border-radius: 10px; font-size: 12px; position: absolute; top: -15px; right: -20px; animation: pulse 1s infinite; }
+@keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
 .kgn-yellow { color: #f3ba2f; }
 
 .coin-container { flex-grow: 1; display: flex; justify-content: center; align-items: center; z-index: 1; }
 #kgn-chip { width: 230px; transition: transform 0.05s; -webkit-tap-highlight-color: transparent; }
 #kgn-chip:active { transform: scale(0.92); }
 
-.page-title { margin-top: 80px; color: #f3ba2f; }
-.cards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; width: 100%; box-sizing: border-box; }
-.card { background: #1a1a1a; border: 1px solid #333; border-radius: 15px; padding: 15px; text-align: center; }
-.card.owned { border-color: #4CAF50; opacity: 0.8; }
-.buy-btn { background: #f3ba2f; color: #000; border: none; padding: 8px 0; width: 100%; border-radius: 10px; font-weight: bold; margin-top: 10px; }
-.buy-btn:disabled { background: #444; color: #888; }
+.page-title { margin-top: 80px; color: #f3ba2f; text-align: center; }
+.cards-grid, .tasks-container { padding: 20px; width: 100%; box-sizing: border-box; }
+.card, .task-card { background: #1a1a1a; border: 1px solid #333; border-radius: 15px; padding: 15px; text-align: center; margin-bottom: 15px; }
+.buy-btn { background: #f3ba2f; color: #000; border: none; padding: 12px 0; width: 100%; border-radius: 10px; font-weight: bold; margin-top: 10px; cursor: pointer; }
+.buy-btn:disabled { background: #444; color: #888; cursor: not-allowed; }
 
 .energy-section { width: 85%; text-align: center; margin-bottom: 120px; z-index: 1; }
 .energy-bar { background: #222; height: 10px; border-radius: 10px; overflow: hidden; border: 1px solid #333; margin-bottom: 8px; }
 #energy-fill { background: linear-gradient(90deg, #f3ba2f, #ffca28); height: 100%; width: 100%; transition: width 0.3s; }
-#energy-timer { font-size: 14px; color: #f3ba2f; font-weight: bold; margin-top: 5px; }
+#energy-timer { font-size: 14px; color: #f3ba2f; font-weight: bold; }
 
 .bottom-nav { position: fixed; bottom: 0; width: 100%; display: flex; background: #111; padding: 15px 0; border-top: 1px solid #333; z-index: 1000; }
-.nav-item { flex: 1; text-align: center; color: #888; font-size: 12px; cursor: pointer; }
+.nav-item { flex: 1; text-align: center; color: #888; font-size: 11px; cursor: pointer; }
 .nav-item.active { color: #f3ba2f; }
 
 .plus-animation { position: absolute; color: #f3ba2f; font-size: 28px; font-weight: bold; pointer-events: none; z-index: 2000; animation: floatUp 0.8s ease-out forwards; }
 @keyframes floatUp { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-100px); opacity: 0; } }
-             
