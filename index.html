@@ -3,39 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KGn Coin Elite</title>
+    <title>KGn Coin - Pro</title>
     <script src="https://sad.adsgram.ai/js/adstg.js"></script>
     <style>
-        body { background: radial-gradient(circle, #1e1e1e 0%, #000000 100%); color: white; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; justify-content: space-between; height: 100vh; overflow: hidden; }
-        .header { margin-top: 20px; background: rgba(255, 255, 255, 0.1); padding: 15px 30px; border-radius: 20px; backdrop-filter: blur(10px); border: 1px solid rgba(255, 215, 0, 0.3); }
-        .score-title { font-size: 14px; color: #ffd700; text-transform: uppercase; letter-spacing: 2px; }
-        #score { font-size: 42px; font-weight: bold; text-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
-        .coin-container { flex-grow: 1; display: flex; align-items: center; justify-content: center; }
-        #coin { width: 250px; cursor: pointer; transition: transform 0.05s ease; filter: drop-shadow(0 0 30px rgba(255, 215, 0, 0.2)); user-select: none; -webkit-tap-highlight-color: transparent; }
-        #coin:active { transform: scale(0.92); }
-        .footer-menu { width: 100%; padding-bottom: 30px; display: flex; flex-direction: column; gap: 15px; align-items: center; }
-        .ad-btn { background: linear-gradient(90deg, #ffd700, #ff8c00); color: black; border: none; padding: 12px 40px; border-radius: 12px; font-weight: bold; font-size: 16px; cursor: pointer; box-shadow: 0 4px 15px rgba(255, 140, 0, 0.3); }
-        .nav-bar { display: flex; gap: 20px; }
-        .nav-item { color: #888; text-decoration: none; font-size: 12px; }
+        :root { --gold: #ffd700; --bg: #0a0a0a; --card: #1c1c1c; }
+        body { background: var(--bg); color: white; font-family: 'Poppins', sans-serif; margin: 0; overflow: hidden; height: 100vh; display: flex; flex-direction: column; }
+        
+        /* Üst Bakiye ve Borsa */
+        .header { padding: 20px; text-align: center; background: rgba(255,255,255,0.05); border-bottom: 2px solid var(--gold); }
+        #score { font-size: 3rem; font-weight: bold; text-shadow: 0 0 15px var(--gold); }
+        .hourly-rate { color: var(--gold); font-size: 0.9rem; }
+
+        /* Ana Oyun Alanı */
+        .game-area { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
+        #coin { width: 260px; filter: drop-shadow(0 0 20px rgba(255,215,0,0.3)); cursor: pointer; transition: transform 0.05s; }
+        #coin:active { transform: scale(0.95); }
+
+        /* Enerji Barı */
+        .energy-container { width: 80%; background: #333; height: 12px; border-radius: 10px; margin: 20px 0; position: relative; }
+        #energy-bar { height: 100%; background: linear-gradient(90deg, #ffcc00, #ff8c00); width: 100%; border-radius: 10px; transition: width 0.3s; }
+        #energy-text { font-size: 0.8rem; margin-top: 5px; }
+
+        /* Menü ve Sekmeler */
+        .tab-content { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 10; padding: 20px; box-sizing: border-box; overflow-y: auto; }
+        .active-tab { display: block; }
+
+        /* Görev ve Borsa Kartları */
+        .card { background: var(--card); border-radius: 15px; padding: 15px; margin-bottom: 10px; border: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
+        .card-btn { background: var(--gold); color: black; border: none; padding: 8px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+
+        /* Alt Navigasyon */
+        .navbar { display: flex; justify-content: space-around; background: #111; padding: 15px 0; border-top: 1px solid #222; }
+        .nav-item { color: #888; font-size: 0.7rem; cursor: pointer; text-align: center; }
+        .nav-item.active { color: var(--gold); }
+        
+        /* Parlama Efekti */
+        .particle { position: absolute; pointer-events: none; background: var(--gold); border-radius: 50%; opacity: 0; animation: rise 1s ease-out forwards; }
+        @keyframes rise { 0% { opacity: 1; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(-100px) scale(0.5); } }
     </style>
 </head>
 <body>
+
     <div class="header">
-        <div class="score-title">KGn Balance</div>
+        <div class="hourly-rate">Saatlik Kazanç: +<span id="hourly-income">0</span> KGn</div>
         <div id="score">0</div>
     </div>
 
-    <div class="coin-container">
-        <img src="coin.png" id="coin" onerror="this.src='https://cdn-icons-png.flaticon.com/512/217/217853.png'">
+    <div id="tab-game" class="game-area tab-content active-tab">
+        <div id="coin-wrapper" style="position: relative;">
+            <img src="coin.png" id="coin" onclick="handleTap(event)" onerror="this.src='https://cdn-icons-png.flaticon.com/512/217/217853.png'">
+        </div>
+        <div class="energy-container">
+            <div id="energy-bar"></div>
+        </div>
+        <div id="energy-text"><span id="current-energy">1000</span> / 1000</div>
     </div>
 
-    <div class="footer-menu">
-        <button class="ad-btn" onclick="izleVeKazan()">📺 REKLAM İZLE (+500 KGn)</button>
-        <div class="nav-bar">
-            <span class="nav-item">🏆 SIRALAMA</span>
-            <span class="nav-item">💼 CÜZDAN</span>
-            <span class="nav-item">⚙️ AYARLAR</span>
+    <div id="tab-market" class="tab-content">
+        <h2>Sanal Borsa</h2>
+        <div class="card">
+            <div><strong>Sanal Madenci v1</strong><br><small>+100 KGn/Saat</small></div>
+            <button class="card-btn" onclick="buyAsset(1000, 100)">1000 KGn</button>
         </div>
+        <div class="card">
+            <div><strong>KGn Silver Card</strong><br><small>+500 KGn/Saat</small></div>
+            <button class="card-btn" onclick="buyAsset(5000, 500)">5000 KGn</button>
+        </div>
+    </div>
+
+    <div id="tab-tasks" class="tab-content">
+        <h2>Görevler</h2>
+        <div class="card">
+            <div><strong>Reklam İzle</strong><br><small>Hemen +500 KGn Kazan</small></div>
+            <button class="card-btn" onclick="izleVeKazan()">İZLE</button>
+        </div>
+    </div>
+
+    <div id="tab-wallet" class="tab-content">
+        <h2>Cüzdanım</h2>
+        <p>Bağlı Cüzdan: <strong>Henüz Bağlanmadı</strong></p>
+        <button class="card-btn" style="width: 100%;">Cüzdan Bağla (Yakında)</button>
+    </div>
+
+    <div class="navbar">
+        <div class="nav-item active" onclick="showTab('tab-game')">🔘<br>OYUN</div>
+        <div class="nav-item" onclick="showTab('tab-market')">📈<br>BORSA</div>
+        <div class="nav-item" onclick="showTab('tab-tasks')">📋<br>GÖREVLER</div>
+        <div class="nav-item" onclick="showTab('tab-wallet')">💰<br>CÜZDAN</div>
     </div>
 
     <script src="script.js"></script>
