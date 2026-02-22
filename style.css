@@ -1,14 +1,13 @@
-/* Genel Sayfa Ayarları */
 body { 
     background: #000; 
     color: #fff; 
     font-family: sans-serif; 
     margin: 0; 
-    padding: 0;
+    padding: 0; 
     overflow: hidden; 
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
+    height: 100vh; 
+    display: flex; 
+    flex-direction: column; 
 }
 
 /* 1. Saatlik Kazanç: Sol Üst */
@@ -19,46 +18,44 @@ body {
     color: #f3ba2f; 
     font-weight: bold; 
     font-size: 18px; 
-    z-index: 1000;
 }
 
 .page { 
     display: flex; 
-    flex-direction: column;
-    height: 100vh;
-    width: 100%;
-    position: relative;
+    flex-direction: column; 
+    height: 100vh; 
+    width: 100%; 
 }
 
 /* 2. Bakiye ve SARI KGn Yazısı */
 .balance-section { 
-    margin-top: 60px; /* Biraz daha yukarı çektik */
+    margin-top: 50px; /* Biraz daha yukarı aldık */
     text-align: center; 
 }
 #balance { 
-    font-size: 70px; 
+    font-size: 75px; 
     font-weight: bold; 
     color: #f3ba2f; 
 }
+/* KGn YAZISINI SARI YAPAR */
 .kgn-yellow { 
-    font-size: 30px; 
+    font-size: 35px; 
     font-weight: bold; 
-    color: #f3ba2f; 
-    margin-left: 8px; 
+    color: #f3ba2f; /* İşte istediğin o sarı renk! */
+    margin-left: 10px; 
 }
 #user-rank { 
     font-size: 18px; 
     color: #888; 
-    margin-top: -5px;
 }
 
-/* 3. ALTIN PARA: BİRAZ YUKARI KAYDIRILMIŞ */
+/* 3. ALTIN PARA: YUKARI KAYDIRILMIŞ */
 .coin-container { 
     flex-grow: 1; 
     display: flex; 
     justify-content: center; 
     align-items: center; 
-    padding-bottom: 40px; /* Parayı enerji barından yukarı iter */
+    padding-bottom: 80px; /* Parayı enerji barından iyice yukarı iter */
 }
 .coin-emoji { 
     font-size: 180px; 
@@ -70,10 +67,10 @@ body {
 }
 .coin-emoji:active { transform: scale(0.92); }
 
-/* 4. Enerji ve Sayaç: Aşağıda Net Görünür */
+/* 4. Enerji ve Sayaç: En Altta Ferah Görünüm */
 .energy-section { 
-    position: absolute;
-    bottom: 120px; /* Menünün üstünde, paranın altında sabitlendi */
+    position: absolute; 
+    bottom: 120px; 
     width: 100%; 
     text-align: center; 
 }
@@ -101,16 +98,15 @@ body {
     margin-top: 5px; 
 }
 
-/* 5. Alt Menü: En Alta Sabit */
+/* 5. Alt Menü */
 .bottom-nav { 
     position: fixed; 
     bottom: 0; 
     width: 100%; 
     display: flex; 
     background: #111; 
-    padding: 20px 0; 
+    padding: 22px 0; 
     border-top: 1px solid #333; 
-    z-index: 2000;
 }
 .nav-item { 
     flex: 1; 
