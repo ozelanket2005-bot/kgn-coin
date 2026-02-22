@@ -3,95 +3,140 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KGn Coin - Pro</title>
+    <title>KGn Elite - Hamster Edition</title>
     <script src="https://sad.adsgram.ai/js/adstg.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #ffd700; --bg: #0a0a0a; --card: #1c1c1c; }
-        body { background: var(--bg); color: white; font-family: 'Poppins', sans-serif; margin: 0; overflow: hidden; height: 100vh; display: flex; flex-direction: column; }
+        :root { --gold: #f3ba2f; --bg: #000; --card-bg: #1c1f24; }
+        body { background: var(--bg); color: white; font-family: 'Roboto', sans-serif; margin: 0; overflow: hidden; height: 100vh; user-select: none; }
         
-        /* Üst Bakiye ve Borsa */
-        .header { padding: 20px; text-align: center; background: rgba(255,255,255,0.05); border-bottom: 2px solid var(--gold); }
-        #score { font-size: 3rem; font-weight: bold; text-shadow: 0 0 15px var(--gold); }
-        .hourly-rate { color: var(--gold); font-size: 0.9rem; }
+        /* Arka Plan Parıltıları */
+        .glow { position: absolute; width: 10px; height: 10px; background: var(--gold); border-radius: 50%; filter: blur(5px); animation: flicker 2s infinite alternate; pointer-events: none; z-index: 0; }
+        @keyframes flicker { from { opacity: 0.2; transform: scale(1); } to { opacity: 0.8; transform: scale(2); } }
 
-        /* Ana Oyun Alanı */
-        .game-area { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
-        #coin { width: 260px; filter: drop-shadow(0 0 20px rgba(255,215,0,0.3)); cursor: pointer; transition: transform 0.05s; }
-        #coin:active { transform: scale(0.95); }
+        /* Üst Panel */
+        .top-nav { padding: 15px; display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.05); z-index: 5; }
+        .stat-box { text-align: left; }
+        .stat-label { font-size: 10px; color: #aaa; text-transform: uppercase; }
+        .stat-value { font-size: 18px; font-weight: bold; color: var(--gold); }
+
+        /* Ana Skor */
+        .main-score-container { text-align: center; margin-top: 20px; z-index: 5; }
+        #total-balance { font-size: 48px; font-weight: 900; text-shadow: 0 0 20px rgba(243, 186, 47, 0.4); }
+
+        /* Oyun Alanı */
+        .game-screen { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
+        #coin-btn { width: 240px; height: 240px; border-radius: 50%; cursor: pointer; position: relative; z-index: 10; transition: transform 0.05s; }
+        #coin-btn:active { transform: scale(0.95); }
+        #coin-img { width: 100%; height: 100%; border-radius: 50%; box-shadow: 0 0 50px rgba(243, 186, 47, 0.2); }
 
         /* Enerji Barı */
-        .energy-container { width: 80%; background: #333; height: 12px; border-radius: 10px; margin: 20px 0; position: relative; }
-        #energy-bar { height: 100%; background: linear-gradient(90deg, #ffcc00, #ff8c00); width: 100%; border-radius: 10px; transition: width 0.3s; }
-        #energy-text { font-size: 0.8rem; margin-top: 5px; }
+        .energy-wrapper { width: 80%; margin-top: 30px; z-index: 10; text-align: center; }
+        .energy-bar-bg { width: 100%; height: 14px; background: #333; border-radius: 10px; overflow: hidden; border: 1px solid #444; }
+        #energy-fill { width: 100%; height: 100%; background: linear-gradient(90deg, #f3ba2f, #ff8c00); transition: width 0.2s; }
+        .energy-info { margin-top: 8px; font-size: 14px; display: flex; justify-content: space-between; }
 
-        /* Menü ve Sekmeler */
-        .tab-content { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 10; padding: 20px; box-sizing: border-box; overflow-y: auto; }
+        /* Sekmeler */
+        .tab-content { display: none; padding: 20px; height: 75vh; overflow-y: auto; background: var(--bg); position: absolute; width: 100%; top: 70px; z-index: 20; }
         .active-tab { display: block; }
 
-        /* Görev ve Borsa Kartları */
-        .card { background: var(--card); border-radius: 15px; padding: 15px; margin-bottom: 10px; border: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
-        .card-btn { background: var(--gold); color: black; border: none; padding: 8px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        /* Kart Tasarımları */
+        .card { background: var(--card-bg); border-radius: 16px; padding: 15px; margin-bottom: 12px; border: 1px solid #2d3139; display: flex; justify-content: space-between; align-items: center; }
+        .card-info h4 { margin: 0; font-size: 16px; }
+        .card-info small { color: var(--gold); }
+        .buy-btn { background: #3a3f47; color: white; border: none; padding: 10px 15px; border-radius: 10px; font-weight: bold; }
+        .buy-btn.active { background: var(--gold); color: black; }
 
-        /* Alt Navigasyon */
-        .navbar { display: flex; justify-content: space-around; background: #111; padding: 15px 0; border-top: 1px solid #222; }
-        .nav-item { color: #888; font-size: 0.7rem; cursor: pointer; text-align: center; }
-        .nav-item.active { color: var(--gold); }
-        
-        /* Parlama Efekti */
-        .particle { position: absolute; pointer-events: none; background: var(--gold); border-radius: 50%; opacity: 0; animation: rise 1s ease-out forwards; }
-        @keyframes rise { 0% { opacity: 1; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(-100px) scale(0.5); } }
+        /* Alt Menü */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; display: flex; background: #111; padding: 10px 0; border-top: 1px solid #222; z-index: 30; }
+        .nav-link { flex: 1; text-align: center; color: #888; font-size: 11px; cursor: pointer; }
+        .nav-link.active { color: var(--gold); }
+
+        /* Tıklama Animasyonu (+5) */
+        .tap-plus { position: absolute; color: white; font-weight: bold; font-size: 24px; animation: floatUp 0.8s ease-out forwards; pointer-events: none; z-index: 100; }
+        @keyframes floatUp { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-100px); } }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <div class="hourly-rate">Saatlik Kazanç: +<span id="hourly-income">0</span> KGn</div>
-        <div id="score">0</div>
+    <div class="top-nav">
+        <div class="stat-box">
+            <div class="stat-label">Saatlik Kazanç</div>
+            <div class="stat-value">+<span id="p-hour">0</span></div>
+        </div>
+        <div class="stat-box" style="text-align: right;">
+            <div class="stat-label">Lig</div>
+            <div class="stat-value">Elite</div>
+        </div>
     </div>
 
-    <div id="tab-game" class="game-area tab-content active-tab">
-        <div id="coin-wrapper" style="position: relative;">
-            <img src="coin.png" id="coin" onclick="handleTap(event)" onerror="this.src='https://cdn-icons-png.flaticon.com/512/217/217853.png'">
-        </div>
-        <div class="energy-container">
-            <div id="energy-bar"></div>
-        </div>
-        <div id="energy-text"><span id="current-energy">1000</span> / 1000</div>
+    <div class="main-score-container">
+        <div id="total-balance">0</div>
     </div>
 
-    <div id="tab-market" class="tab-content">
-        <h2>Sanal Borsa</h2>
+    <div id="screen-game" class="tab-content active-tab" style="top: 140px; height: 65vh;">
+        <div class="game-screen">
+            <div id="coin-btn" onclick="tapAction(event)">
+                <img src="coin.png" id="coin-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/217/217853.png'">
+            </div>
+            
+            <div class="energy-wrapper">
+                <div class="energy-bar-bg"><div id="energy-fill"></div></div>
+                <div class="energy-info">
+                    <span>⚡ <span id="e-current">500</span> / 500</span>
+                    <span id="e-timer">00:00</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="screen-market" class="tab-content">
+        <h2 style="color: var(--gold);">Sanal Ofis</h2>
+        <div id="market-list"></div>
+    </div>
+
+    <div id="screen-tasks" class="tab-content">
+        <h2 style="color: var(--gold);">Görev Merkezi</h2>
         <div class="card">
-            <div><strong>Sanal Madenci v1</strong><br><small>+100 KGn/Saat</small></div>
-            <button class="card-btn" onclick="buyAsset(1000, 100)">1000 KGn</button>
+            <div class="card-info"><h4>2x Tıklama Gücü (2 Reklam)</h4><small id="task-click-status">Kalan Hak: 3</small></div>
+            <button class="buy-btn active" id="btn-task-click" onclick="startTask('click')">İZLE</button>
         </div>
         <div class="card">
-            <div><strong>KGn Silver Card</strong><br><small>+500 KGn/Saat</small></div>
-            <button class="card-btn" onclick="buyAsset(5000, 500)">5000 KGn</button>
+            <div class="card-info"><h4>Enerji Fullle (2 Reklam)</h4><small id="task-energy-status">Kalan Hak: 3</small></div>
+            <button class="buy-btn active" id="btn-task-energy" onclick="startTask('energy')">İZLE</button>
         </div>
-    </div>
-
-    <div id="tab-tasks" class="tab-content">
-        <h2>Görevler</h2>
         <div class="card">
-            <div><strong>Reklam İzle</strong><br><small>Hemen +500 KGn Kazan</small></div>
-            <button class="card-btn" onclick="izleVeKazan()">İZLE</button>
+            <div class="card-info"><h4>1000 KGn Kazan (10 Reklam)</h4><small id="task-gold-status">Kalan: 10 Reklam</small></div>
+            <button class="buy-btn active" id="btn-task-gold" onclick="startTask('gold')">İZLE</button>
         </div>
     </div>
 
-    <div id="tab-wallet" class="tab-content">
-        <h2>Cüzdanım</h2>
-        <p>Bağlı Cüzdan: <strong>Henüz Bağlanmadı</strong></p>
-        <button class="card-btn" style="width: 100%;">Cüzdan Bağla (Yakında)</button>
+    <div id="screen-wallet" class="tab-content">
+        <div style="text-align: center; margin-top: 50px;">
+            <img src="https://cdn-icons-png.flaticon.com/512/2489/2489756.png" width="100">
+            <h3>Cüzdan Bağlantısı</h3>
+            <p style="color: #888;">Henüz gelmedi, lütfen bekleyiniz.</p>
+        </div>
     </div>
 
-    <div class="navbar">
-        <div class="nav-item active" onclick="showTab('tab-game')">🔘<br>OYUN</div>
-        <div class="nav-item" onclick="showTab('tab-market')">📈<br>BORSA</div>
-        <div class="nav-item" onclick="showTab('tab-tasks')">📋<br>GÖREVLER</div>
-        <div class="nav-item" onclick="showTab('tab-wallet')">💰<br>CÜZDAN</div>
+    <div class="bottom-nav">
+        <div class="nav-link active" onclick="showTab('screen-game', this)">🔘<br>Oyun</div>
+        <div class="nav-link" onclick="showTab('screen-market', this)">📈<br>Borsa</div>
+        <div class="nav-link" onclick="showTab('screen-tasks', this)">📋<br>Görevler</div>
+        <div class="nav-link" onclick="showTab('screen-wallet', this)">💰<br>Cüzdan</div>
     </div>
 
     <script src="script.js"></script>
+    <script>
+        // Arka plan parıltıları oluştur
+        for(let i=0; i<15; i++) {
+            let g = document.createElement('div');
+            g.className = 'glow';
+            g.style.left = Math.random() * 100 + 'vw';
+            g.style.top = Math.random() * 100 + 'vh';
+            g.style.animationDelay = Math.random() * 2 + 's';
+            document.body.appendChild(g);
+        }
+    </script>
 </body>
 </html>
