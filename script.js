@@ -1,5 +1,4 @@
-// DURUM KAYDI
-let state = JSON.parse(localStorage.getItem('kgn_v6_final')) || {
+let state = JSON.parse(localStorage.getItem('kgn_v7_final')) || {
     balance: 0,
     hourlyIncome: 0,
     energy: 500,
@@ -9,7 +8,6 @@ let state = JSON.parse(localStorage.getItem('kgn_v6_final')) || {
     ads: { gold: 0, click: 0, energy: 0 }
 };
 
-// ADSGRAM ID (Panelindeki ID ile eşleşmeli)
 const AdController = window.Adsgram ? window.Adsgram.init({ blockId: "23508" }) : null;
 
 const borsaKartlari = [
@@ -24,16 +22,15 @@ const borsaKartlari = [
 function init() {
     renderMarket();
     createParticles();
-    
     let gap = (Date.now() - state.lastUpdate) / 1000;
     state.balance += (state.hourlyIncome / 3600) * gap;
-
     setInterval(tick, 1000);
 }
 
 function tick() {
     state.balance += (state.hourlyIncome / 3600);
-    if (state.energy < 500) state.energy += 0.05; // Yavaş dolum
+    // 3 saatte dolum (500 / 10800 saniye = saniyede 0.046 enerji)
+    if (state.energy < 500) state.energy += (500 / 10800);
     updateUI();
     save();
 }
@@ -43,81 +40,70 @@ function updateUI() {
     document.getElementById('hourly-display').innerText = "+" + state.hourlyIncome + " KGn";
     document.getElementById('current-energy').innerText = Math.floor(state.energy);
     document.getElementById('energy-fill').style.width = (state.energy / 500 * 100) + "%";
+
+    const timerElement = document.getElementById('cooldown-timer');
+    if (state.energy >= 500) {
+        timerElement.innerText = "Enerji Dolu";
+        timerElement.style.color = "#ffd700";
+    } else {
+        let kalanEnerji = 500 - state.energy;
+        let saniyeBaşınaEnerji = 500 / 10800;
+        let kalanSaniye = Math.floor(kalanEnerji / saniyeBaşınaEnerji);
+        let saat = Math.floor(kalanSaniye / 3600);
+        let dakika = Math.floor((kalanSaniye % 3600) / 60);
+        let saniye = kalanSaniye % 60;
+        timerElement.innerText = (saat > 0 ? saat + "s " : "") + String(dakika).padStart(2, '0') + ":" + String(saniye).padStart(2, '0');
+        timerElement.style.color = "#ffffff";
+    }
 }
 
-// REKLAM SİSTEMİ (TAMİR EDİLDİ)
 async function runRewardAd(type) {
     if (!AdController) return alert("Reklam sistemi hazır değil!");
-
     AdController.show().then(() => {
-        // Reklam bittiğinde ödül ver
         if (type === 'gold') {
-            if (state.ads.gold < 10) {
-                state.balance += 100;
-                state.ads.gold++;
-                alert("Ödül: +100 KGn hesaba eklendi!");
-            } else { alert("Günlük limit doldu!"); }
+            if (state.ads.gold < 10) { state.balance += 100; state.ads.gold++; alert("+100 KGn eklendi!"); }
+            else { alert("Günlük limit doldu!"); }
         } 
         else if (type === 'click') {
             state.ads.click++;
             if (state.ads.click >= 2) {
-                state.tapPower = 10;
-                state.ads.click = 0;
-                alert("1 Saatlik 2x Güç Aktif!");
+                state.tapPower = 10; state.ads.click = 0;
                 document.getElementById('c-status').innerText = "AKTİF";
-                setTimeout(() => { state.tapPower = 5; }, 3600000);
-            } else { alert("Son 1 reklam kaldı!"); }
+                setTimeout(() => { state.tapPower = 5; document.getElementById('c-status').innerText = "Pasif"; }, 3600000);
+                alert("2x Güç Aktif!");
+            } else { alert("Son 1 reklam!"); }
         }
         else if (type === 'energy') {
             state.ads.energy++;
-            if (state.ads.energy >= 2) {
-                state.energy = 500;
-                state.ads.energy = 0;
-                alert("Enerji Deposu Fullendi!");
-            } else { alert("Son 1 reklam kaldı!"); }
+            if (state.ads.energy >= 2) { state.energy = 500; state.ads.energy = 0; alert("Enerji Full!"); }
+            else { alert("Son 1 reklam!"); }
         }
         save();
-    }).catch((err) => {
-        console.error(err);
-        alert("Reklam henüz yüklenmedi, lütfen az sonra tekrar deneyin.");
-    });
+    }).catch(() => alert("Reklam yüklenemedi."));
 }
 
 function renderMarket() {
     const list = document.getElementById('market-list');
-    list.innerHTML = ''; // Temizle ve yeniden yaz
+    if(!list) return;
+    list.innerHTML = '';
     borsaKartlari.forEach(k => {
         let isOwned = state.inventory.includes(k.id);
-        list.innerHTML += `
-            <div class="market-card">
-                <div>
-                    <strong>${k.name}</strong><br>
-                    <small>Gelir: +${k.income} KGn/saat</small>
-                </div>
-                <button class="task-go-btn" ${isOwned ? 'disabled' : ''} onclick="buyCard('${k.id}', ${k.price}, ${k.income})">
-                    ${isOwned ? 'SAHİPSİN' : k.price + ' KGn'}
-                </button>
-            </div>`;
+        list.innerHTML += `<div class="market-card"><div><strong>${k.name}</strong><br><small>Gelir: +${k.income} KGn/saat</small></div><button class="task-go-btn" ${isOwned ? 'disabled' : ''} onclick="buyCard('${k.id}', ${k.price}, ${k.income})">${isOwned ? 'SAHİPSİN' : k.price + ' KGn'}</button></div>`;
     });
 }
 
 function buyCard(id, price, income) {
     if (state.balance >= price) {
-        state.balance -= price;
-        state.hourlyIncome += income;
-        state.inventory.push(id);
-        renderMarket();
-        save();
+        state.balance -= price; state.hourlyIncome += income; state.inventory.push(id);
+        renderMarket(); save();
     } else { alert("Yetersiz KGn!"); }
 }
 
 function handleTap(e) {
     if (state.energy >= 5) {
-        state.balance += state.tapPower;
-        state.energy -= 5;
+        state.balance += state.tapPower; state.energy -= 5;
         let p = document.createElement('div');
-        p.className = 'plus-anim';
-        p.innerText = "+" + state.tapPower;
+        p.className = 'plus-anim'; p.innerText = "+" + state.tapPower;
         p.style.left = e.clientX + 'px'; p.style.top = e.clientY + 'px';
         document.body.appendChild(p);
         setTimeout(() => p.remove(), 600);
@@ -144,10 +130,6 @@ function createParticles() {
     }
 }
 
-function save() {
-    state.lastUpdate = Date.now();
-    localStorage.setItem('kgn_v6_final', JSON.stringify(state));
-}
-
+function save() { state.lastUpdate = Date.now(); localStorage.setItem('kgn_v7_final', JSON.stringify(state)); }
 window.onload = init;
-              
+        
