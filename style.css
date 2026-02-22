@@ -1,4 +1,3 @@
-/* Genel Sayfa Ayarları */
 body { 
     background: #000; 
     color: #fff; 
@@ -12,7 +11,7 @@ body {
     position: relative; 
 }
 
-/* Yanıp Sönen Sarı Noktalar (Arka Plan Süsü) */
+/* Yanıp Sönen Sarı Noktalar */
 #particles-container { 
     position: absolute; 
     top: 0; 
@@ -23,21 +22,18 @@ body {
     overflow: hidden; 
     z-index: 0; 
 }
-
 .particle { 
     position: absolute; 
     background-color: rgba(243, 186, 47, 0.6); 
     border-radius: 50%; 
     animation: twinkle 4s infinite ease-in-out alternate; 
 }
-
 @keyframes twinkle { 
     0% { transform: scale(0.5); opacity: 0.1; } 
     50% { transform: scale(1.2); opacity: 0.7; } 
     100% { transform: scale(0.5); opacity: 0.1; } 
 }
 
-/* Saatlik Kazanç Yazısı */
 #hourly-rate-container { 
     position: fixed; 
     top: 20px; 
@@ -47,7 +43,6 @@ body {
     z-index: 10; 
 }
 
-/* Ana Oyun Alanı */
 .page { 
     display: flex; 
     flex-direction: column; 
@@ -56,5 +51,102 @@ body {
     z-index: 1; 
 }
 
-/* Bakiye Bölümü */
-.balance-section
+.balance-section { 
+    margin-top: 50px; 
+    text-align: center; 
+}
+#balance { 
+    font-size: 65px; 
+    font-weight: bold; 
+    color: #f3ba2f; 
+}
+.kgn-yellow { 
+    font-size: 30px; 
+    font-weight: bold; 
+    color: #f3ba2f; 
+    margin-left: 5px; 
+}
+#user-rank { 
+    color: #888; 
+    font-size: 16px; 
+    margin-top: -5px; 
+}
+
+/* Coin Butonu */
+.coin-container { 
+    flex-grow: 1; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    margin-top: -30px; 
+}
+#kgn-chip { 
+    width: 220px; 
+    height: auto; 
+    cursor: pointer; 
+    transition: transform 0.05s; 
+    -webkit-tap-highlight-color: transparent; 
+}
+#kgn-chip:active { 
+    transform: scale(0.92); 
+}
+
+/* Enerji Tasarımı */
+.energy-section { 
+    width: 100%; 
+    text-align: center; 
+    margin-bottom: 110px; 
+}
+.energy-bar { 
+    background: #222; 
+    height: 12px; 
+    width: 80%; 
+    margin: 0 auto 8px; 
+    border-radius: 10px; 
+    overflow: hidden; 
+    border: 1px solid #333; 
+}
+#energy-fill { 
+    background: linear-gradient(90deg, #f3ba2f, #ffca28); 
+    height: 100%; 
+    width: 100%; 
+    transition: width 0.3s; 
+}
+#energy-text { font-size: 20px; font-weight: bold; }
+#energy-timer { font-size: 14px; color: #f3ba2f; margin-top: 5px; font-weight: bold; }
+
+/* Alt Menü */
+.bottom-nav { 
+    position: fixed; 
+    bottom: 0; 
+    width: 100%; 
+    display: flex; 
+    background: #111; 
+    padding: 20px 0; 
+    border-top: 1px solid #333; 
+    z-index: 100; 
+}
+.nav-item { 
+    flex: 1; 
+    text-align: center; 
+    color: #888; 
+    font-size: 12px; 
+    cursor: pointer;
+}
+
+/* +5 Tıklama Animasyonu */
+.plus-animation {
+    position: absolute;
+    color: #f3ba2f; 
+    font-size: 28px;
+    font-weight: bold;
+    pointer-events: none;
+    z-index: 200;
+    animation: floatUp 0.8s ease-out forwards;
+    text-shadow: 0 0 10px rgba(243, 186, 47, 0.8);
+}
+@keyframes floatUp {
+    0% { transform: translateY(0); opacity: 1; }
+    100% { transform: translateY(-120px); opacity: 0; }
+    }
+    
