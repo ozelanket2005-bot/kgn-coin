@@ -7,40 +7,37 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="hourly-rate-container">Saatlik: <span id="hourly-rate">0</span></div>
+
+    <div id="hourly-rate-container">
+        Saatlik: <span id="hourly-rate">+0</span>
+    </div>
 
     <div id="game-page" class="page active">
+        
         <div class="balance-section">
-            <div id="balance">0</div>
+            <div id="balance-container">
+                <span id="balance">0</span> <span style="font-size: 24px;">KGn</span>
+            </div>
             <div id="user-rank">Çaylak</div>
         </div>
 
         <div class="coin-container">
-    <img src="coin.jpg" id="kgn-chip" alt="KGn Coin">
-        </div>
-        
+            <img src="coin.jpg" id="kgn-chip" alt="KGn Coin">
         </div>
 
         <div class="energy-section">
-            <div class="energy-bar"><div id="energy-fill"></div></div>
+            <div class="energy-bar">
+                <div id="energy-fill"></div>
+            </div>
             <div id="energy-text">500/500</div>
-            <div id="energy-timer">Enerji Dolu</div>
+            <div id="energy-timer">Dolmasına: 0s 0d 0sn</div>
         </div>
-    </div>
 
-    <div id="mine-page" class="page">
-        <h2 style="text-align:center; margin-top:50px;">Borsa</h2>
-        <p style="text-align:center; color:#888;">Yakında buraya geliştirmeler eklenecek...</p>
-    </div>
-
-    <div id="tasks-page" class="page">
-        <h2 style="text-align:center; margin-top:50px;">Görevler</h2>
-        <p style="text-align:center; color:#888;">Adsgram görevleri buraya gelecek...</p>
     </div>
 
     <nav class="bottom-nav">
         <div class="nav-item" onclick="showPage('game-page')">🪙 Oyun</div>
-        <div class="nav-item" onclick="showPage('mine-page')">⚒️ Borsa</div>
+        <div class="nav-item" onclick="showPage('exchange-page')">⚒️ Borsa</div>
         <div class="nav-item" onclick="showPage('tasks-page')">📋 Görevler</div>
     </nav>
 
