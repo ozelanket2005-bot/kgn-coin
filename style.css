@@ -1,46 +1,52 @@
 body { background: #000; color: #fff; font-family: sans-serif; margin: 0; padding: 0; overflow: hidden; height: 100vh; display: flex; flex-direction: column; }
-#hourly-rate-container { position: fixed; top: 20px; left: 20px; color: #f3ba2f; font-weight: bold; font-size: 18px; }
 
-.page { display: flex; flex-direction: column; height: 100vh; width: 100%; position: relative; }
+/* Sol Üstteki Kazanç */
+#hourly-rate-container { position: fixed; top: 20px; left: 20px; color: #f3ba2f; font-weight: bold; font-size: 16px; }
 
-/* Bakiye ve Sarı KGn */
-.balance-section { margin-top: 50px; text-align: center; }
-#balance { font-size: 70px; font-weight: bold; color: #f3ba2f; }
-.kgn-yellow { font-size: 32px; font-weight: bold; color: #f3ba2f; margin-left: 8px; }
-#user-rank { font-size: 18px; color: #888; }
+.page { display: flex; flex-direction: column; height: 100vh; width: 100%; align-items: center; }
 
-/* COIN.PNG TASARIMI VE YUKARI ÇEKME */
+/* Bakiye: Üstte */
+.balance-section { margin-top: 60px; text-align: center; }
+#balance { font-size: 60px; font-weight: bold; color: #f3ba2f; }
+.kgn-yellow { font-size: 28px; font-weight: bold; color: #f3ba2f; margin-left: 5px; }
+#user-rank { font-size: 16px; color: #888; }
+
+/* COIN BUTONU: Küçültülmüş ve Ortalanmış */
 .coin-container { 
     flex-grow: 1; 
     display: flex; 
     justify-content: center; 
-    align-items: center; 
-    padding-bottom: 140px; /* Enerji barından iyice uzaklaştırır */
+    align-items: center;
+    margin-top: -20px; /* Biraz yukarı çekmek için */
 }
 .coin-container img { 
-    width: 320px; /* İdeal mobil boyutu */
+    width: 240px; /* Butonu küçülttük */
     height: auto;
     cursor: pointer; 
+    transition: transform 0.05s;
     user-select: none;
-    transition: transform 0.05s; 
     -webkit-tap-highlight-color: transparent;
-    filter: drop-shadow(0 0 20px rgba(243, 186, 47, 0.4));
 }
 .coin-container img:active { transform: scale(0.95); }
 
-/* ENERJİ VE SAYAÇ: YUKARIYA SABİTLENDİ */
+/* ENERJİ BÖLÜMÜ: Butonun hemen altında */
 .energy-section { 
-    position: absolute; 
-    bottom: 140px; /* Menünün üstünde ferah alan bırakır */
     width: 100%; 
     text-align: center; 
+    margin-bottom: 120px; /* Menünün üstünde durması için */
 }
-.energy-bar { background: #222; height: 14px; width: 85%; margin: 0 auto 10px; border-radius: 10px; border: 1px solid #333; overflow: hidden; }
+.energy-bar { 
+    background: #222; 
+    height: 12px; 
+    width: 80%; 
+    margin: 0 auto 8px; 
+    border-radius: 10px; 
+    overflow: hidden; 
+}
 #energy-fill { background: linear-gradient(90deg, #f3ba2f, #ffca28); height: 100%; width: 100%; }
-#energy-text { font-size: 22px; font-weight: bold; }
-#energy-timer { font-size: 16px; color: #f3ba2f; margin-top: 5px; font-weight: bold; }
+#energy-text { font-size: 20px; font-weight: bold; }
+#energy-timer { font-size: 14px; color: #f3ba2f; margin-top: 4px; }
 
-/* Menü */
-.bottom-nav { position: fixed; bottom: 0; width: 100%; display: flex; background: #111; padding: 22px 0; border-top: 1px solid #333; }
-.nav-item { flex: 1; text-align: center; font-size: 16px; color: #888; }
-             
+/* Alt Menü Sabit */
+.bottom-nav { position: fixed; bottom: 0; width: 100%; display: flex; background: #111; padding: 18px 0; border-top: 1px solid #333; }
+.nav-item { flex: 1; text-align: center; font-size: 14px; color: #888; }
