@@ -1,41 +1,45 @@
 let balance = 0;
 let energy = 500;
 const maxEnergy = 500;
-const kgnPerClick = 5; // Her tıklamada 5 KGn
-const energyCost = 5; // Her tıklamada 5 enerji azalır
+const kgnPerClick = 5; 
+const energyCost = 5; 
 
-const balanceElement = document.getElementById('balance');
+const balanceEl = document.getElementById('balance');
 const energyText = document.getElementById('energy-text');
 const energyFill = document.getElementById('energy-fill');
-const coinButton = document.getElementById('kgn-chip');
+const coinBtn = document.getElementById('kgn-chip');
+const energyTimer = document.getElementById('energy-timer'); // YENİ: Enerji timer elementini yakala
 
-// Tıklama Fonksiyonu
-coinButton.addEventListener('click', (e) => {
+function updateUI() {
+    balanceEl.textContent = balance.toLocaleString();
+    energyText.textContent = `${energy}/${maxEnergy}`;
+    energyFill.style.width = `${(energy / maxEnergy) * 100}%`;
+
+    // Enerji dolum süresini güncelle (basit bir örnek)
+    if (energy < maxEnergy) {
+        const remainingEnergy = maxEnergy - energy;
+        const timeToFill = remainingEnergy; // Saniyede 1 dolduğu için
+        const minutes = Math.floor(timeToFill / 60);
+        const seconds = timeToFill % 60;
+        energyTimer.textContent = `Dolmasına: ${minutes}d ${seconds}sn`;
+    } else {
+        energyTimer.textContent = `Dolu`;
+    }
+}
+
+// Tıklama Olayı
+coinBtn.addEventListener('click', () => {
     if (energy >= energyCost) {
-        // Kazanç ve Enerji Azalması
         balance += kgnPerClick;
         energy -= energyCost;
-
-        // Ekranı Güncelle
         updateUI();
-
-        // Tıklama Efekti (Opsiyonel: +5 yazısı uçsun istersen)
-        showClickAnimation(e);
     } else {
-        alert("Enerjin bitti Efendim Kaan! Biraz dinlenmelisin.");
+        // İstersen burada bir "enerjin bitti" uyarısı gösterebilirsin
+        console.log("Enerjin bitti!");
     }
 });
 
-function updateUI() {
-    balanceElement.textContent = balance.toLocaleString(); // Bakiyeyi formatlı yazar
-    energyText.textContent = `${energy}/${maxEnergy}`;
-    
-    // Enerji barını güncelle
-    const energyPercentage = (energy / maxEnergy) * 100;
-    energyFill.style.width = `${energyPercentage}%`;
-}
-
-// Enerji Yenileme (Saniyede 1 enerji dolar)
+// Enerji Yenileme (Saniyede +1)
 setInterval(() => {
     if (energy < maxEnergy) {
         energy++;
@@ -43,35 +47,30 @@ setInterval(() => {
     }
 }, 1000);
 
-function showClickAnimation(e) {
-    const text = document.createElement('div');
-    text.textContent = `+${kgnPerClick}`;
-    text.style.position = 'absolute';
-    text.style.left = `${e.pageX}px`;
-    text.style.top = `${e.pageY}px`;
-    text.style.color = '#f3ba2f';
-    text.style.fontWeight = 'bold';
-    text.style.fontSize = '24px';
-    text.style.pointerEvents = 'none';
-    text.style.animation = 'floatUp 0.8s ease-out forwards';
-    
-    document.body.appendChild(text);
-    
-    setTimeout(() => {
-        text.remove();
-    }, 800);
-}
+// Yanıp Sönen Noktaları Oluşturma Fonksiyonu
+function createParticles() {
+    const particlesContainer = document.getElementById('particles-container');
+    const numParticles = 50; // Oluşturulacak nokta sayısı
+    const containerHeight = particlesContainer.offsetHeight;
+    const containerWidth = particlesContainer.offsetWidth;
 
-// Float Animasyonu için CSS (Eğer style.css'e eklemediysen)
-const style = document.createElement('style');
-style.innerHTML = `
-@keyframes floatUp {
-    0% { transform: translateY(0); opacity: 1; }
-    100% { transform: translateY(-100px); opacity: 0; }
-}
-`;
-document.head.appendChild(style);
-
-// İlk açılışta UI güncelle
-updateUI();
+    for (let i = 0; i < numParticles; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
         
+        const size = Math.random() * 8 + 4; // 4px ile 12px arası boyut
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+
+        particle.style.left = `${Math.random() * containerWidth}px`;
+        particle.style.top = `${Math.random() * containerHeight}px`;
+        
+        particle.style.animationDelay = `${Math.random() * 4}s`; // Farklı zamanlarda yanıp sönsünler
+        
+        particlesContainer.appendChild(particle);
+    }
+}
+
+// İlk açılışta UI ve Noktaları güncelle
+updateUI();
+createParticles(); // Noktaları oluştur
