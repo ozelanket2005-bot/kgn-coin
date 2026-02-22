@@ -1,23 +1,132 @@
-body { background: #000; color: #fff; font-family: sans-serif; margin: 0; overflow: hidden; height: 100vh; }
+/* Temel Sayfa Ayarları */
+body { 
+    background: #000; 
+    color: #fff; 
+    font-family: sans-serif; 
+    margin: 0; 
+    overflow: hidden; 
+    height: 100vh; 
+    display: flex;
+    flex-direction: column;
+}
 
-#hourly-rate-container { position: absolute; top: 20px; left: 20px; color: #f3ba2f; font-weight: bold; font-size: 18px; }
+/* Saatlik Kazanç: Sol Üstte */
+#hourly-rate-container { 
+    position: absolute; 
+    top: 25px; 
+    left: 20px; 
+    color: #f3ba2f; 
+    font-weight: bold; 
+    font-size: 18px; 
+    z-index: 10;
+}
 
-.page { display: none; height: 100vh; width: 100%; position: absolute; top: 0; }
-.page.active { display: block; }
+/* Sayfa Yapısı */
+.page { 
+    display: none; 
+    height: 100vh; 
+    width: 100%; 
+    position: absolute; 
+    top: 0; 
+    box-sizing: border-box;
+}
+.page.active { 
+    display: flex;
+    flex-direction: column;
+}
 
-.balance-section { margin-top: 100px; text-align: center; }
-#balance { font-size: 55px; font-weight: bold; color: #f3ba2f; }
-#user-rank { font-size: 16px; color: #888; }
+/* Bakiye Bölümü: Paranın Üstünde Orta Uzaklıkta */
+.balance-section { 
+    margin-top: 100px; 
+    text-align: center; 
+}
+#balance { 
+    font-size: 55px; 
+    font-weight: bold; 
+    color: #f3ba2f; 
+}
+#user-rank { 
+    font-size: 16px; 
+    color: #888; 
+    margin-top: 5px;
+}
 
-.coin-container { display: flex; justify-content: center; align-items: center; height: 45vh; margin-top: 20px; }
-.coin-container img { width: 250px; cursor: pointer; transition: transform 0.1s; }
-.coin-container img:active { transform: scale(0.95); }
+/* Altın Para: Tam Merkezde */
+.coin-container { 
+    flex-grow: 1;
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+}
+.coin-container img { 
+    width: 250px; 
+    cursor: pointer; 
+    transition: transform 0.05s; /* 50ms hıza uygun tepki */
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+.coin-container img:active { 
+    transform: scale(0.92); /* Tıklama hissi */
+}
 
-.energy-section { position: absolute; bottom: 120px; width: 100%; text-align: center; }
-.energy-bar { background: #222; height: 14px; width: 80%; margin: 0 auto 10px; border-radius: 10px; border: 1px solid #333; overflow: hidden; }
-#energy-fill { background: #f3ba2f; height: 100%; width: 100%; transition: width 0.5s; }
-#energy-text { font-size: 18px; font-weight: bold; }
-#energy-timer { font-size: 13px; color: #f3ba2f; margin-top: 4px; }
+/* Enerji Bölümü: Paranın Aşağısında */
+.energy-section { 
+    margin-bottom: 120px; 
+    width: 100%; 
+    text-align: center; 
+}
+.energy-bar { 
+    background: #222; 
+    height: 14px; 
+    width: 80%; 
+    margin: 0 auto 10px; 
+    border-radius: 10px; 
+    border: 1px solid #333; 
+    overflow: hidden; 
+}
+#energy-fill { 
+    background: linear-gradient(90deg, #f3ba2f, #ffca28); 
+    height: 100%; 
+    width: 100%; 
+    transition: width 0.5s linear; 
+}
+#energy-text { 
+    font-size: 18px; 
+    font-weight: bold; 
+    color: #fff;
+}
+#energy-timer { 
+    font-size: 13px; 
+    color: #f3ba2f; 
+    margin-top: 5px; 
+}
 
-.bottom-nav { position: fixed; bottom: 0; width: 100%; display: flex; background: #111; padding: 20px 0; border-top: 1px solid #333; z-index: 100; }
-.nav-item { flex: 1; text-align: center; cursor: pointer; font-size: 15px; color: #888; }
+/* Alt Menü Çubuğu */
+.bottom-nav { 
+    position: fixed; 
+    bottom: 0; 
+    width: 100%; 
+    display: flex; 
+    background: #111; 
+    padding: 20px 0; 
+    border-top: 1px solid #333; 
+    z-index: 100; 
+}
+.nav-item { 
+    flex: 1; 
+    text-align: center; 
+    cursor: pointer; 
+    font-size: 15px; 
+    color: #888; 
+}
+.nav-item:hover {
+    color: #f3ba2f;
+}
+
+/* Borsa ve Görev Başlıkları */
+h2 {
+    text-align: center;
+    margin-top: 60px;
+    color: #f3ba2f;
+  }
+      
