@@ -38,11 +38,11 @@ body {
 
 /* Bakiye Bölümü: Paranın Üstünde */
 .balance-section { 
-    margin-top: 80px; 
+    margin-top: 60px; 
     text-align: center; 
 }
 #balance { 
-    font-size: 60px; /* Bakiyeyi de biraz büyüttüm */
+    font-size: 65px; /* Bakiye fontunu da heybete uygun büyüttüm */
     font-weight: bold; 
     color: #f3ba2f; 
 }
@@ -52,7 +52,7 @@ body {
     margin-top: 5px;
 }
 
-/* ALTIN PARA: DEV BOYUT AYARI */
+/* ALTIN PARA: 500PX DEV BOYUT */
 .coin-container { 
     flex-grow: 1;
     display: flex; 
@@ -60,32 +60,32 @@ body {
     align-items: center; 
 }
 .coin-container img { 
-    width: 380px; /* Boyutu 320'den 380'e çıkardım, artık çok daha büyük */
-    max-width: 95%; /* Kenarlardan çok az pay bırakır */
+    width: 500px; /* Senin isteğin üzerine 500px yaptık */
+    max-width: 98%; /* Ekranın kenarlarına sıfıra yakın durur */
     cursor: pointer; 
-    transition: transform 0.05s; /* 50ms tıklama hızına özel tepki */
+    transition: transform 0.05s; /* 50ms hıza özel tepki */
     user-select: none;
     -webkit-tap-highlight-color: transparent;
     display: block;
     margin: 0 auto;
-    filter: drop-shadow(0 0 15px rgba(243, 186, 47, 0.3)); /* Etrafına hafif bir ışıltı ekler */
+    filter: drop-shadow(0 0 20px rgba(243, 186, 47, 0.4)); /* Daha belirgin ışıltı */
 }
 .coin-container img:active { 
-    transform: scale(0.94); /* Tıklama basılma efekti */
+    transform: scale(0.96); /* Büyük olduğu için hafif bir esneme hissi */
 }
 
 /* Enerji Bölümü: Paranın Altında */
 .energy-section { 
-    margin-bottom: 110px; 
+    margin-bottom: 100px; 
     width: 100%; 
     text-align: center; 
 }
 .energy-bar { 
     background: #222; 
-    height: 16px; /* Barı biraz kalınlaştırdım */
-    width: 85%; 
+    height: 18px; 
+    width: 90%; 
     margin: 0 auto 10px; 
-    border-radius: 12px; 
+    border-radius: 15px; 
     border: 1px solid #333; 
     overflow: hidden; 
 }
@@ -96,14 +96,14 @@ body {
     transition: width 0.5s linear; 
 }
 #energy-text { 
-    font-size: 20px; 
+    font-size: 22px; 
     font-weight: bold; 
     color: #fff;
 }
 #energy-timer { 
-    font-size: 14px; 
+    font-size: 15px; 
     color: #f3ba2f; 
-    margin-top: 5px; /* 5 saatlik dolum sayacı alanı */
+    margin-top: 5px; 
 }
 
 /* Alt Menü Çubuğu: Sabit */
