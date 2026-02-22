@@ -10,7 +10,7 @@ body {
     flex-direction: column; 
 }
 
-/* 1. Saatlik Kazanç: Sol Üst */
+/* Saatlik Kazanç: Sol Üst */
 #hourly-rate-container { 
     position: fixed; 
     top: 20px; 
@@ -27,9 +27,9 @@ body {
     width: 100%; 
 }
 
-/* 2. Bakiye ve SARI KGn Yazısı */
+/* Bakiye ve SARI KGn Yazısı */
 .balance-section { 
-    margin-top: 50px; /* Biraz daha yukarı aldık */
+    margin-top: 50px; 
     text-align: center; 
 }
 #balance { 
@@ -37,11 +37,10 @@ body {
     font-weight: bold; 
     color: #f3ba2f; 
 }
-/* KGn YAZISINI SARI YAPAR */
 .kgn-yellow { 
     font-size: 35px; 
     font-weight: bold; 
-    color: #f3ba2f; /* İşte istediğin o sarı renk! */
+    color: #f3ba2f; 
     margin-left: 10px; 
 }
 #user-rank { 
@@ -49,13 +48,13 @@ body {
     color: #888; 
 }
 
-/* 3. ALTIN PARA: YUKARI KAYDIRILMIŞ */
+/* ALTIN PARA: YUKARI ÇEKİLDİ */
 .coin-container { 
     flex-grow: 1; 
     display: flex; 
     justify-content: center; 
     align-items: center; 
-    padding-bottom: 80px; /* Parayı enerji barından iyice yukarı iter */
+    padding-bottom: 120px; /* Parayı alt öğelerden daha fazla uzaklaştırıp yukarı iter */
 }
 .coin-emoji { 
     font-size: 180px; 
@@ -67,10 +66,10 @@ body {
 }
 .coin-emoji:active { transform: scale(0.92); }
 
-/* 4. Enerji ve Sayaç: En Altta Ferah Görünüm */
+/* ENERJİ BÖLÜMÜ: YUKARIYA ÇEKİLDİ */
 .energy-section { 
     position: absolute; 
-    bottom: 120px; 
+    bottom: 150px; /* 120'den 150'ye çıkararak iyice yukarı taşıdım */
     width: 100%; 
     text-align: center; 
 }
@@ -89,16 +88,17 @@ body {
     width: 100%; 
 }
 #energy-text { 
-    font-size: 20px; 
+    font-size: 22px; 
     font-weight: bold; 
 }
 #energy-timer { 
-    font-size: 14px; 
+    font-size: 16px; 
     color: #f3ba2f; 
-    margin-top: 5px; 
+    margin-top: 8px; /* Enerji barının altına net boşluk */
+    font-weight: bold;
 }
 
-/* 5. Alt Menü */
+/* Alt Menü: Sabit */
 .bottom-nav { 
     position: fixed; 
     bottom: 0; 
