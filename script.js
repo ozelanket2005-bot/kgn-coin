@@ -139,4 +139,4 @@ function createParticles() {
 
 function save() { state.lastUpdate = Date.now(); localStorage.setItem('kgn_v9_stable', JSON.stringify(state)); }
 window.onload = init;
-        
+            
