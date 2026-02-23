@@ -22,13 +22,13 @@
     </div>
 
     <div id="balance-container">
-        <span id="balance-text" style="color: white;">0</span> <span style="color: #ffd700;">KGn</span>
+        <span id="balance-text">0</span> <span style="color: #ffd700;">KGn</span>
     </div>
 
     <div id="game-tab" class="tab-content active">
         <div class="coin-wrapper">
             <div id="coin-clicker" onclick="handleTap(event)">
-                <img src="coin.png" alt="KGn" onerror="this.src='https://i.ibb.co/v4m6m6S/kgn-coin.png'">
+                <img src="https://i.ibb.co/v4m6m6S/kgn-coin.png" alt="KGn">
             </div>
         </div>
         
@@ -38,7 +38,7 @@
             </div>
             <div class="energy-info">
                 <span>⚡ <span id="current-energy">500</span>/500</span>
-                <span id="cooldown-timer" style="font-weight: bold;">Enerji Dolu</span>
+                <span id="cooldown-timer">Enerji Dolu</span>
             </div>
         </div>
     </div>
@@ -50,16 +50,25 @@
 
     <div id="tasks-tab" class="tab-content">
         <h2 class="section-title">Para Kazan & Ödül Al</h2>
-        <div class="scroll-area">
-            <div class="pro-task-card">
-                <div class="task-icon">💰</div>
-                <div class="task-info">
-                    <strong>Hızlı KGn Paketi</strong>
-                    <span>Her Reklam: <b style="color:#ffd700">+100 KGn</b></span>
-                    <small>Günlük Limit: 10 Reklam</small>
-                </div>
-                <button class="task-go-btn" onclick="runRewardAd('gold')">İZLE</button>
+        <div class="scroll-area" id="task-list">
             </div>
+    </div>
 
-            <div
-                
+    <div id="wallet-tab" class="tab-content">
+        <div class="empty-state">
+            <img src="https://cdn-icons-png.flaticon.com/512/2489/2489756.png" width="60">
+            <h3>Cüzdan Bağlantısı</h3>
+            <p>Henüz gelmedi, bekleyiniz Efendim Kaan.</p>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <div class="nav-btn active" onclick="showTab('game-tab', this)">🔘<br>Oyun</div>
+        <div class="nav-btn" onclick="showTab('market-tab', this)">📈<br>Borsa</div>
+        <div class="nav-btn" onclick="showTab('tasks-tab', this)">📋<br>Görevler</div>
+        <div class="nav-btn" onclick="showTab('wallet-tab', this)">💰<br>Cüzdan</div>
+    </nav>
+
+    <script src="script.js"></script>
+</body>
+</html>
