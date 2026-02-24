@@ -1,5 +1,4 @@
-// DURUM YÖNETİMİ
-let state = JSON.parse(localStorage.getItem('kgn_v10_final')) || {
+let state = JSON.parse(localStorage.getItem('kgn_v11_stable')) || {
     balance: 0,
     hourlyIncome: 0,
     energy: 500,
@@ -7,13 +6,14 @@ let state = JSON.parse(localStorage.getItem('kgn_v10_final')) || {
     tapPower: 5,
     lastUpdate: Date.now(),
     tasks: {
-        click: { count: 0, lastReset: 0, nextAvailable: 0 },
-        energy: { count: 0, lastReset: 0, nextAvailable: 0 },
-        gold: { count: 0, lastReset: 0, nextAvailable: 0 }
+        click: { count: 0, hak: 3, nextAvailable: 0 },
+        energy: { count: 0, hak: 3, nextAvailable: 0 },
+        gold: { count: 0, hak: 1, nextAvailable: 0 }
     }
 };
 
-const AdController = window.Adsgram ? window.Adsgram.init({ blockId: "23508" }) : null;
+// ADSGRAM ID GÜNCELLENDİ: 23517
+const AdController = window.Adsgram ? window.Adsgram.init({ blockId: "23517" }) : null;
 
 const borsaKartlari = [
     { id: 'ym', name: 'Yazılım Mühendisi', price: 5000, income: 1000 },
@@ -29,7 +29,6 @@ function init() {
     renderTasks();
     createParticles();
     
-    // Çevrimdışı Kazanç ve Enerji
     let simdi = Date.now();
     let gecenSaniye = (simdi - state.lastUpdate) / 1000;
     state.balance += (state.hourlyIncome / 3600) * gecenSaniye;
@@ -63,82 +62,99 @@ function updateUI() {
     }
 }
 
-// TIKLAMA MANTIĞI
 function handleTap(e) {
     if (state.energy >= 5) {
         state.balance += state.tapPower;
         state.energy -= 5;
-        
-        // +5 Animasyonu
         let p = document.createElement('div');
         p.className = 'plus-anim';
         p.innerText = "+" + state.tapPower;
-        p.style.left = (e.clientX || e.touches[0].clientX) + 'px';
-        p.style.top = (e.clientY || e.touches[0].clientY) + 'px';
+        let x = e.clientX || (e.touches ? e.touches[0].clientX : 0);
+        let y = e.clientY || (e.touches ? e.touches[0].clientY : 0);
+        p.style.left = x + 'px'; p.style.top = y + 'px';
         document.body.appendChild(p);
         setTimeout(() => p.remove(), 800);
         updateUI();
     }
 }
 
-// REKLAM VE GÖREV DÖNGÜSÜ
-async function runRewardAd(type) {
-    if (!AdController) return alert("Reklam şu an hazır değil.");
-    
+// REKLAM GÖREVLERİNİ GÖSTEREN FONKSİYON (EKLENDİ)
+function renderTasks() {
+    const list = document.getElementById('task-list');
+    if (!list) return;
     let now = Date.now();
-    let t = state.tasks[type];
 
-    // Bekleme Süresi Kontrolü
-    if (now < t.nextAvailable) {
-        return alert("Lütfen bekleme süresinin bitmesini bekleyin!");
-    }
+    const tasksHTML = [
+        { id: 'gold', title: '10 Reklam İzle (Para Kazan)', desc: 'Reklam başı 100 KGn', cooldown: state.tasks.gold.nextAvailable },
+        { id: 'click', title: '2 Reklam İzle (2x Güç)', desc: '1 Saatlik Tıklama Bonusu', cooldown: state.tasks.click.nextAvailable },
+        { id: 'energy', title: '2 Reklam İzle (Full Enerji)', desc: 'Enerjini Anında Yenile', cooldown: state.tasks.energy.nextAvailable }
+    ];
 
+    list.innerHTML = tasksHTML.map(t => {
+        let isWaiting = now < t.cooldown;
+        let buttonText = isWaiting ? "BEKLE" : "İZLE";
+        return `
+            <div class="task-card">
+                <div><strong>${t.title}</strong><br><small>${t.desc}</small></div>
+                <button class="task-go-btn" ${isWaiting ? 'disabled' : ''} onclick="runRewardAd('${t.id}')">${buttonText}</button>
+            </div>`;
+    }).join('');
+}
+
+async function runRewardAd(type) {
+    if (!AdController) return alert("Reklam sistemi hazır değil.");
+    
     AdController.show().then(() => {
-        t.count++;
-        
+        let now = Date.now();
+        let t = state.tasks[type];
+
         if (type === 'gold') {
             state.balance += 100;
+            t.count++;
             if (t.count >= 10) {
-                t.nextAvailable = now + (24 * 60 * 60 * 1000);
+                t.hak--;
                 t.count = 0;
+                if (t.hak <= 0) { t.nextAvailable = now + (24 * 60 * 60 * 1000); t.hak = 1; }
             }
+            alert("100 KGn Kazandın!");
         } 
         else if (type === 'click') {
+            t.count++;
             if (t.count >= 2) {
-                state.tapPower = 10;
-                t.count = 0;
-                setTimeout(() => state.tapPower = 5, 3600000); // 1 saatlik etki
-                // 3 hak kontrolü
-                // (Burada senin istediğin 3 hak / 24 saat mantığı işlenir)
-            }
+                state.tapPower = 10; t.count = 0; t.hak--;
+                setTimeout(() => { state.tapPower = 5; }, 3600000);
+                if (t.hak <= 0) { t.nextAvailable = now + (24 * 60 * 60 * 1000); t.hak = 3; }
+                alert("2x Tıklama Gücü Aktif!");
+            } else { alert("Ödül için 1 reklam daha!"); }
         }
         else if (type === 'energy') {
+            t.count++;
             if (t.count >= 2) {
-                state.energy = 500;
-                t.count = 0;
-                t.nextAvailable = now + (10 * 60 * 1000); // 10 dk bekleme
-            }
+                state.energy = 500; t.count = 0; t.hak--;
+                if (t.hak <= 0) { t.nextAvailable = now + (24 * 60 * 60 * 1000); t.hak = 3; }
+                else { t.nextAvailable = now + (10 * 60 * 1000); }
+                alert("Enerji Fullendi!");
+            } else { alert("Ödül için 1 reklam daha!"); }
         }
         
         save();
         renderTasks();
-        alert("Başarılı!");
     }).catch(() => alert("Reklam tamamlanmadı."));
 }
 
 function renderMarket() {
     const list = document.getElementById('market-list');
-    list.innerHTML = '';
-    borsaKartlari.forEach(k => {
+    if(!list) return;
+    list.innerHTML = borsaKartlari.map(k => {
         let isOwned = state.inventory.includes(k.id);
-        list.innerHTML += `
+        return `
             <div class="market-card">
                 <div><strong>${k.name}</strong><br><small>Gelir: +${k.income}/saat</small></div>
                 <button class="task-go-btn" ${isOwned ? 'disabled' : ''} onclick="buyCard('${k.id}', ${k.price}, ${k.income})">
-                    ${isOwned ? 'SAHİPSİN' : k.price + ' KGn'}
+                    ${isOwned ? 'ALINDI' : k.price + ' KGn'}
                 </button>
             </div>`;
-    });
+    }).join('');
 }
 
 function buyCard(id, price, income) {
@@ -160,6 +176,7 @@ function showTab(tabId, el) {
 
 function createParticles() {
     const cont = document.getElementById('particle-container');
+    if(!cont) return;
     for(let i=0; i<20; i++) {
         let p = document.createElement('div');
         p.className = 'particle';
@@ -171,6 +188,6 @@ function createParticles() {
     }
 }
 
-function save() { state.lastUpdate = Date.now(); localStorage.setItem('kgn_v10_final', JSON.stringify(state)); }
+function save() { state.lastUpdate = Date.now(); localStorage.setItem('kgn_v11_stable', JSON.stringify(state)); }
 window.onload = init;
-                
+                                         
