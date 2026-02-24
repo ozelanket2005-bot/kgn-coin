@@ -1,4 +1,4 @@
-let state = JSON.parse(localStorage.getItem('kgn_v12_stable')) || {
+let state = JSON.parse(localStorage.getItem('kgn_v15_final')) || {
     balance: 0,
     hourlyIncome: 0,
     energy: 500,
@@ -50,25 +50,24 @@ function updateUI() {
     const timer = document.getElementById('cooldown-timer');
     if (state.energy >= 500) {
         timer.innerText = "Enerji Dolu";
-        timer.style.color = "#ffd700";
     } else {
         let kalan = Math.floor((500 - state.energy) / (500 / 10800));
         let h = Math.floor(kalan / 3600), m = Math.floor((kalan % 3600) / 60), s = kalan % 60;
         timer.innerText = `${h > 0 ? h + 's ' : ''}${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-        timer.style.color = "#fff";
     }
 }
 
-// ADSGRAM TAMİR EDİLEN BÖLÜM
+// REKLAM SİSTEMİ DÜZELTİLDİ
 async function runRewardAd(type) {
-    // 23517 ID'sini doğrudan burada kontrol ederek çağırıyoruz
+    // Kütüphanenin yüklenmesi için son bir kontrol yapıyoruz
     if (typeof window.Adsgram === 'undefined') {
-        return alert("Reklam kütüphanesi yüklenemedi. Lütfen sayfayı yenileyin.");
+        alert("Reklam ağı bağlanıyor... Lütfen 2 saniye sonra tekrar deneyin.");
+        return;
     }
 
-    const controller = window.Adsgram.init({ blockId: "23517" });
-    
-    controller.show().then(() => {
+    const AdController = window.Adsgram.init({ blockId: "23517" });
+
+    AdController.show().then(() => {
         let now = Date.now();
         let t = state.tasks[type];
 
@@ -96,13 +95,11 @@ async function runRewardAd(type) {
                 else { t.nextAvailable = now + (10 * 60 * 1000); }
             }
         }
-        
         save();
         renderTasks();
-        alert("Ödül başarıyla tanımlandı Efendim Kaan!");
-    }).catch((err) => {
-        console.error(err);
-        alert("Reklam hazır değil veya izlenmedi. (Adsgram Onayı Bekleniyor)");
+        alert("İşlem Başarılı Efendim Kaan!");
+    }).catch(() => {
+        alert("Reklam tamamlanmadı veya bir hata oluştu. Lütfen tekrar deneyin.");
     });
 }
 
@@ -174,6 +171,6 @@ function createParticles() {
     }
 }
 
-function save() { state.lastUpdate = Date.now(); localStorage.setItem('kgn_v12_stable', JSON.stringify(state)); }
+function save() { state.lastUpdate = Date.now(); localStorage.setItem('kgn_v15_final', JSON.stringify(state)); }
 window.onload = init;
-    
+                             
