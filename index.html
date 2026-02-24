@@ -28,7 +28,7 @@
     <div id="game-tab" class="tab-content active">
         <div class="coin-wrapper">
             <div id="coin-clicker" onclick="handleTap(event)">
-                <img src="https://i.ibb.co/v4m6m6S/kgn-coin.png" alt="KGn">
+                <img src="coin.png" alt="KGn" id="main-coin-img" onerror="this.src='https://i.ibb.co/v4m6m6S/kgn-coin.png'">
             </div>
         </div>
         
@@ -50,8 +50,7 @@
 
     <div id="tasks-tab" class="tab-content">
         <h2 class="section-title">Para Kazan & Ödül Al</h2>
-        <div class="scroll-area" id="task-list">
-            </div>
+        <div class="scroll-area" id="task-list"></div>
     </div>
 
     <div id="wallet-tab" class="tab-content">
@@ -71,4 +70,5 @@
 
     <script src="script.js"></script>
 </body>
-</html>
+            </html>
+            
