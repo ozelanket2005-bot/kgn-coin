@@ -6,6 +6,16 @@
     <title>KGn Elite Pro</title>
     <script src="https://sad.adsgram.ai/js/adstg.js"></script>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Emoji boyutunu ve görünümünü ayarlayan küçük ekleme */
+        .coin-emoji {
+            font-size: 180px;
+            display: block;
+            text-align: center;
+            filter: drop-shadow(0 0 30px #ffd700);
+            user-select: none;
+        }
+    </style>
 </head>
 <body>
     <div id="particle-container"></div>
@@ -28,7 +38,7 @@
     <div id="game-tab" class="tab-content active">
         <div class="coin-wrapper">
             <div id="coin-clicker" onclick="handleTap(event)">
-                <img src="coin.png" alt="KGn" id="main-coin-img" onerror="this.src='https://i.ibb.co/v4m6m6S/kgn-coin.png'">
+                <span class="coin-emoji">💰</span>
             </div>
         </div>
         
@@ -70,5 +80,4 @@
 
     <script src="script.js"></script>
 </body>
-            </html>
-            
+</html>
