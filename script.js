@@ -57,17 +57,17 @@ function updateUI() {
     }
 }
 
-// REKLAM SİSTEMİ DÜZELTİLDİ
+// REKLAM SİSTEMİ - ADSGRAM UYUMLU HALE GETİRİLDİ
 async function runRewardAd(type) {
-    // Kütüphanenin yüklenmesi için son bir kontrol yapıyoruz
     if (typeof window.Adsgram === 'undefined') {
-        alert("Reklam ağı bağlanıyor... Lütfen 2 saniye sonra tekrar deneyin.");
+        alert("Reklam ağı yüklenemedi, lütfen sayfayı yenileyin.");
         return;
     }
 
     const AdController = window.Adsgram.init({ blockId: "23517" });
 
-    AdController.show().then(() => {
+    AdController.show().then((result) => {
+        // Reklam başarıyla izlendiğinde çalışacak blok
         let now = Date.now();
         let t = state.tasks[type];
 
@@ -98,8 +98,10 @@ async function runRewardAd(type) {
         save();
         renderTasks();
         alert("İşlem Başarılı Efendim Kaan!");
-    }).catch(() => {
-        alert("Reklam tamamlanmadı veya bir hata oluştu. Lütfen tekrar deneyin.");
+    }).catch((err) => {
+        // Reklam hata verdiğinde veya kapatıldığında çalışacak blok
+        console.error(err);
+        alert("Reklam tamamlanmadı veya şu an uygun reklam yok.");
     });
 }
 
@@ -173,4 +175,4 @@ function createParticles() {
 
 function save() { state.lastUpdate = Date.now(); localStorage.setItem('kgn_v15_final', JSON.stringify(state)); }
 window.onload = init;
-                             
+            
