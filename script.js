@@ -57,17 +57,15 @@ function updateUI() {
     }
 }
 
-// REKLAM SİSTEMİ - HATA VEREN KISIM DÜZELTİLDİ
-async function runRewardAd(type) {
-    // Kütüphaneyi hem window içinde hem direkt kontrol ediyoruz
-    const adsLib = window.Adsgram || Adsgram;
-    
-    if (!adsLib) {
-        alert("Reklam ağı henüz hazır değil. Lütfen birkaç saniye bekleyip tekrar deneyin.");
+// REKLAM SİSTEMİ - BUTON TEPKİSİZLİĞİ DÜZELTİLDİ
+function runRewardAd(type) {
+    // window.Adsgram mevcut mu kontrol et
+    if (typeof window.Adsgram === 'undefined') {
+        alert("Reklam ağı yükleniyor, lütfen 3 saniye sonra tekrar deneyin.");
         return;
     }
 
-    const AdController = adsLib.init({ blockId: "23517" });
+    const AdController = window.Adsgram.init({ blockId: "23517" });
 
     AdController.show().then((result) => {
         let now = Date.now();
@@ -101,11 +99,12 @@ async function runRewardAd(type) {
         renderTasks();
         alert("İşlem Başarılı Efendim Kaan!");
     }).catch((err) => {
-        console.error("Reklam yüklenemedi:", err);
-        alert("Şu an uygun reklam yok veya reklam kapatıldı.");
+        console.error("Adsgram Hatası:", err);
+        alert("Reklam şu an gösterilemiyor. (Hata: " + (err.error || "Bilinmiyor") + ")");
     });
 }
 
+// Kalan fonksiyonlar (handleTap, renderTasks, renderMarket, buyCard, showTab, createParticles, save) aynı kalsın...
 function handleTap(e) {
     if (state.energy >= 5) {
         state.balance += state.tapPower;
@@ -176,3 +175,4 @@ function createParticles() {
 
 function save() { state.lastUpdate = Date.now(); localStorage.setItem('kgn_v15_final', JSON.stringify(state)); }
 window.onload = init;
+
