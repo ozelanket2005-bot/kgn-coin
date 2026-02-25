@@ -57,17 +57,19 @@ function updateUI() {
     }
 }
 
-// REKLAM SİSTEMİ - ADSGRAM UYUMLU HALE GETİRİLDİ
+// REKLAM SİSTEMİ - HATA VEREN KISIM DÜZELTİLDİ
 async function runRewardAd(type) {
-    if (typeof window.Adsgram === 'undefined') {
-        alert("Reklam ağı yüklenemedi, lütfen sayfayı yenileyin.");
+    // Kütüphaneyi hem window içinde hem direkt kontrol ediyoruz
+    const adsLib = window.Adsgram || Adsgram;
+    
+    if (!adsLib) {
+        alert("Reklam ağı henüz hazır değil. Lütfen birkaç saniye bekleyip tekrar deneyin.");
         return;
     }
 
-    const AdController = window.Adsgram.init({ blockId: "23517" });
+    const AdController = adsLib.init({ blockId: "23517" });
 
     AdController.show().then((result) => {
-        // Reklam başarıyla izlendiğinde çalışacak blok
         let now = Date.now();
         let t = state.tasks[type];
 
@@ -99,9 +101,8 @@ async function runRewardAd(type) {
         renderTasks();
         alert("İşlem Başarılı Efendim Kaan!");
     }).catch((err) => {
-        // Reklam hata verdiğinde veya kapatıldığında çalışacak blok
-        console.error(err);
-        alert("Reklam tamamlanmadı veya şu an uygun reklam yok.");
+        console.error("Reklam yüklenemedi:", err);
+        alert("Şu an uygun reklam yok veya reklam kapatıldı.");
     });
 }
 
@@ -175,4 +176,3 @@ function createParticles() {
 
 function save() { state.lastUpdate = Date.now(); localStorage.setItem('kgn_v15_final', JSON.stringify(state)); }
 window.onload = init;
-            
