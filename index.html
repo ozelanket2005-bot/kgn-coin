@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KGn Elite Pro</title>
+    <title>KGn Coin</title>
     <script src="https://sad.adsgram.ai/js/adstg.js" async></script>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* Giriş Ekranı Stili */
         #login-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: radial-gradient(circle, #1a1a1a 0%, #000 100%);
@@ -23,26 +22,40 @@
             padding: 12px 40px; border-radius: 10px; border: none;
             background: #ffd700; color: #000; font-weight: bold; font-size: 18px; cursor: pointer;
         }
-        /* Coin Emoji ve Kullanıcı Adı Alanı */
         .coin-emoji {
             font-size: 180px; display: block; text-align: center;
             filter: drop-shadow(0 0 30px #ffd700); user-select: none; cursor: pointer;
         }
-        .user-header {
-            padding: 5px 20px; color: #ffd700; font-weight: bold; font-size: 14px;
+        .user-header { padding: 5px 20px; color: #ffd700; font-weight: bold; font-size: 14px; }
+        
+        /* Günlük Ödül Modal */
+        #reward-modal {
+            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 90%; background: #111; border: 2px solid #ffd700; border-radius: 20px;
+            z-index: 2000; padding: 20px; box-sizing: border-box;
         }
+        .reward-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 15px; }
+        .reward-day { background: #222; border: 1px solid #333; padding: 5px; text-align: center; border-radius: 8px; font-size: 11px; }
+        .reward-day.active { border-color: #ffd700; background: #2a2a00; }
+        .close-btn { background: #ffd700; color: #000; border: none; padding: 8px; width: 100%; border-radius: 10px; margin-top: 15px; font-weight: bold; }
     </style>
 </head>
 <body>
     <div id="login-screen" style="display: none;">
-        <span style="font-size: 60px; margin-bottom: 20px;">👑</span>
-        <h2 style="color: #ffd700;">KGn Elite'e Hoş Geldin</h2>
+        <span style="font-size: 60px; margin-bottom: 20px;">💰</span>
+        <h2 style="color: #ffd700;">KGn Coin'e Hoş Geldin</h2>
         <input type="text" id="username-input" placeholder="Kullanıcı adınızı yazın..." maxlength="15">
         <button onclick="saveUsername()">BAŞLAT</button>
     </div>
 
-    <div id="particle-container"></div>
+    <div id="reward-modal">
+        <h3 style="color: #ffd700; text-align: center; margin: 0;">7 Günlük Plan</h3>
+        <div class="reward-grid" id="reward-days-list"></div>
+        <button class="close-btn" onclick="claimDailyReward()">ÖDÜLÜ AL</button>
+        <button class="close-btn" style="background: #333; color: #fff; margin-top: 5px;" onclick="document.getElementById('reward-modal').style.display='none'">KAPAT</button>
+    </div>
 
+    <div id="particle-container"></div>
     <div class="user-header" id="display-name"></div>
 
     <div class="top-stats">
@@ -50,9 +63,9 @@
             <small>SAATLİK KAZANÇ</small>
             <div id="hourly-display">+0 KGn</div>
         </div>
-        <div class="stat-box" style="text-align: right;">
-            <small>LİG</small>
-            <div style="color: #ffd700;">ELITE</div>
+        <div class="stat-box" style="text-align: right; cursor: pointer;" onclick="document.getElementById('reward-modal').style.display='block'">
+            <small>GÜNLÜK ÖDÜL</small>
+            <div style="color: #ffd700;">🎁 TIKLA</div>
         </div>
     </div>
 
@@ -66,7 +79,6 @@
                 <span class="coin-emoji">💰</span>
             </div>
         </div>
-        
         <div class="energy-footer">
             <div class="energy-bar-container">
                 <div id="energy-fill"></div>
@@ -79,20 +91,20 @@
     </div>
 
     <div id="market-tab" class="tab-content">
-        <h2 class="section-title">Sanal Ofis</h2>
+        <h2 class="section-title">Sanal Ofis (Borsa)</h2>
         <div id="market-list" class="scroll-area"></div>
     </div>
 
     <div id="tasks-tab" class="tab-content">
-        <h2 class="section-title">Para Kazan & Ödül Al</h2>
+        <h2 class="section-title">Görevler</h2>
         <div class="scroll-area" id="task-list"></div>
     </div>
 
     <div id="wallet-tab" class="tab-content">
-        <div class="empty-state">
+        <div class="empty-state" style="text-align: center; padding-top: 50px;">
             <img src="https://cdn-icons-png.flaticon.com/512/2489/2489756.png" width="60">
-            <h3>Cüzdan Bağlantısı</h3>
-            <p>Henüz gelmedi, bekleyiniz Efendim Kaan.</p>
+            <h3>Cüzdan Menüsü</h3>
+            <p>Henüz gelmedi, bekleyiniz Efendim.</p>
         </div>
     </div>
 
@@ -105,5 +117,4 @@
 
     <script src="script.js"></script>
 </body>
-        </html>
-        
+</html>
