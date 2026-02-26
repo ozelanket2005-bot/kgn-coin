@@ -7,7 +7,8 @@
     <script src="https://sad.adsgram.ai/js/adstg.js" async></script>
     <link rel="stylesheet" href="style.css">
     <style>
-        * { -webkit-tap-highlight-color: transparent; outline: none; }
+        /* Mavi Çizgi ve Seçilme Engelleme */
+        * { -webkit-tap-highlight-color: transparent; outline: none; -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
         
         #login-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -24,10 +25,9 @@
             padding: 12px 40px; border-radius: 10px; border: none;
             background: #ffd700; color: #000; font-weight: bold; font-size: 18px; cursor: pointer;
         }
-        /* Torba yerine Altın Para 🪙 eklendi */
         .coin-emoji {
             font-size: 180px; display: block; text-align: center;
-            filter: drop-shadow(0 0 30px #ffd700); user-select: none; cursor: pointer;
+            filter: drop-shadow(0 0 30px #ffd700); cursor: pointer;
             transition: transform 0.1s;
         }
         .coin-emoji:active { transform: scale(0.95); }
@@ -50,7 +50,6 @@
         .invite-box { background: #111; border: 1px solid #ffd700; border-radius: 15px; padding: 20px; text-align: center; margin-top: 20px; }
         .referral-link { background: #222; padding: 10px; border-radius: 10px; color: #ffd700; word-break: break-all; margin: 15px 0; font-size: 14px; border: 1px dashed #ffd700; }
         
-        /* Parıltı Animasyonu (Hafif artırılmış hali) */
         .particle {
             position: absolute; background: #ffd700; border-radius: 50%; opacity: 0.6;
             pointer-events: none; animation: float linear infinite;
@@ -59,6 +58,13 @@
             0% { transform: translateY(0) rotate(0deg); opacity: 0; }
             50% { opacity: 0.6; }
             100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Arkadaş Listesi Stili */
+        .friend-item {
+            display: flex; justify-content: space-between; align-items: center;
+            background: #1a1a1a; padding: 12px; border-radius: 10px;
+            margin-bottom: 8px; border-left: 3px solid #ffd700;
         }
     </style>
 </head>
@@ -106,6 +112,13 @@
             <div class="referral-link" id="ref-link-display">Link Oluşturuluyor...</div>
             <button class="task-go-btn" onclick="copyRefLink()">LİNKİ KOPYALA</button>
         </div>
+        
+        <div style="margin-top: 25px;">
+            <h3 style="color: #ffd700; font-size: 18px; margin-bottom: 10px;">Arkadaşlar (<span id="friend-count">0</span>)</h3>
+            <div id="friend-list-container" class="scroll-area" style="max-height: 250px;">
+                <p style="color: #666; text-align: center; margin-top: 20px;">Henüz kimse davet edilmedi.</p>
+            </div>
+        </div>
     </div>
 
     <div id="tasks-tab" class="tab-content">
@@ -114,7 +127,7 @@
     </div>
 
     <div id="game-tab" class="tab-content active">
-        <div class="coin-wrapper" style="user-select: none;">
+        <div class="coin-wrapper">
             <div id="coin-clicker" onclick="handleTap(event)">
                 <span class="coin-emoji">🪙</span>
             </div>
