@@ -66,7 +66,7 @@ function claimDailyReward() {
     let birGun = 24 * 60 * 60 * 1000;
 
     if (now - state.lastRewardClaim < birGun) {
-        alert("Bugünkü ödülünü zaten aldın Efendim Kaan. Yarın tekrar gel!");
+        alert("Bugünkü ödülünü zaten aldın. Yarın tekrar gel!");
         return;
     }
 
