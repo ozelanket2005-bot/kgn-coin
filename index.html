@@ -7,7 +7,6 @@
     <script src="https://sad.adsgram.ai/js/adstg.js" async></script>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* Mavi Çizgi ve Seçilme Engelleme */
         * { -webkit-tap-highlight-color: transparent; outline: none; }
         
         #login-screen {
@@ -25,12 +24,13 @@
             padding: 12px 40px; border-radius: 10px; border: none;
             background: #ffd700; color: #000; font-weight: bold; font-size: 18px; cursor: pointer;
         }
+        /* Torba yerine Altın Para 🪙 eklendi */
         .coin-emoji {
             font-size: 180px; display: block; text-align: center;
             filter: drop-shadow(0 0 30px #ffd700); user-select: none; cursor: pointer;
             transition: transform 0.1s;
         }
-        .coin-emoji:active { transform: scale(0.95); } /* Tıklama hissi */
+        .coin-emoji:active { transform: scale(0.95); }
 
         .user-header { padding: 10px 20px; color: #ffd700; font-weight: bold; font-size: 14px; display: flex; align-items: center; }
         
@@ -49,6 +49,17 @@
 
         .invite-box { background: #111; border: 1px solid #ffd700; border-radius: 15px; padding: 20px; text-align: center; margin-top: 20px; }
         .referral-link { background: #222; padding: 10px; border-radius: 10px; color: #ffd700; word-break: break-all; margin: 15px 0; font-size: 14px; border: 1px dashed #ffd700; }
+        
+        /* Parıltı Animasyonu (Hafif artırılmış hali) */
+        .particle {
+            position: absolute; background: #ffd700; border-radius: 50%; opacity: 0.6;
+            pointer-events: none; animation: float linear infinite;
+        }
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            50% { opacity: 0.6; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
     </style>
 </head>
 <body>
@@ -97,10 +108,15 @@
         </div>
     </div>
 
+    <div id="tasks-tab" class="tab-content">
+        <h2 class="section-title">Görevler</h2>
+        <div class="scroll-area" id="task-list"></div>
+    </div>
+
     <div id="game-tab" class="tab-content active">
         <div class="coin-wrapper" style="user-select: none;">
             <div id="coin-clicker" onclick="handleTap(event)">
-                <span class="coin-emoji">💰</span>
+                <span class="coin-emoji">🪙</span>
             </div>
         </div>
         <div class="energy-footer">
@@ -119,27 +135,24 @@
         <div id="market-list" class="scroll-area"></div>
     </div>
 
-    <div id="tasks-tab" class="tab-content">
-        <h2 class="section-title">Görevler</h2>
-        <div class="scroll-area" id="task-list"></div>
-    </div>
-
     <div id="wallet-tab" class="tab-content">
         <div class="empty-state" style="text-align: center; padding-top: 50px;">
             <img src="https://cdn-icons-png.flaticon.com/512/2489/2489756.png" width="60">
             <h3>Cüzdan Menüsü</h3>
             <p>Yakında aktif edilecektir.</p>
+            <p style="color: #ffd700; font-size: 14px; margin-top: 10px;">KGn birikimlerinize devam ediniz:)</p>
         </div>
     </div>
 
     <nav class="bottom-nav">
         <div class="nav-btn" onclick="showTab('invite-tab', this)">👥<br>Davet</div>
+        <div class="nav-btn" onclick="showTab('tasks-tab', this)">📋<br>Görevler</div>
         <div class="nav-btn active" onclick="showTab('game-tab', this)">🔘<br>Oyun</div>
         <div class="nav-btn" onclick="showTab('market-tab', this)">📈<br>Borsa</div>
-        <div class="nav-btn" onclick="showTab('tasks-tab', this)">📋<br>Görevler</div>
         <div class="nav-btn" onclick="showTab('wallet-tab', this)">💰<br>Cüzdan</div>
     </nav>
 
     <script src="script.js"></script>
 </body>
-</html>
+    </html>
+            
