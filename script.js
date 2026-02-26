@@ -1,6 +1,7 @@
-let state = JSON.parse(localStorage.getItem('kgn_coin_v21')) || {
+let state = JSON.parse(localStorage.getItem('kgn_coin_v25')) || {
     username: null,
     balance: 0,
+    totalCollected: 0, // Seviye için toplam birikim takibi
     hourlyIncome: 0,
     energy: 500,
     inventory: [],
@@ -15,7 +16,6 @@ let state = JSON.parse(localStorage.getItem('kgn_coin_v21')) || {
     }
 };
 
-// Borsa Fiyatları 2 Katına Çıkarıldı
 const borsaKartlari = [
     { id: 'ym', name: 'Yazılım Mühendisi', price: 10000, income: 1000 },
     { id: 'gm', name: 'Görsel Mühendisi', price: 10000, income: 1000 },
@@ -46,56 +46,42 @@ function init() {
     
     let simdi = Date.now();
     let gecenSaniye = (simdi - state.lastUpdate) / 1000;
-    state.balance += (state.hourlyIncome / 3600) * gecenSaniye;
+    let earned = (state.hourlyIncome / 3600) * gecenSaniye;
+    state.balance += earned;
+    state.totalCollected += earned; // Çevrimdışı kazancı seviyeye ekle
     state.energy = Math.min(500, state.energy + (gecenSaniye * (500 / 10800)));
 
     setInterval(tick, 1000);
 }
 
-function renderRewardGrid() {
-    const grid = document.getElementById('reward-days-list');
-    grid.innerHTML = dailyRewards.map(r => `
-        <div class="reward-day ${state.rewardDay == r.d ? 'active' : ''}">
-            <b>Gün ${r.d}</b><br>${r.prize}
-        </div>
-    `).join('');
-}
-
-function claimDailyReward() {
-    let now = Date.now();
-    let birGun = 24 * 60 * 60 * 1000;
-
-    if (now - state.lastRewardClaim < birGun) {
-        alert("Bugünkü ödülünü zaten aldın. Yarın tekrar gel!");
-        return;
-    }
-
-    let current = dailyRewards[state.rewardDay - 1];
+// SEVİYE HESAPLAMA (Tam İstediğin Şekilde)
+function calculateLevel() {
+    let tc = state.totalCollected;
+    if (tc < 100000) return 1;
+    if (tc < 350000) return 2;
+    if (tc < 450000) return 3;
+    if (tc < 550000) return 4;
+    if (tc < 650000) return 5;
+    if (tc < 750000) return 6;
+    if (tc < 850000) return 7;
+    if (tc < 950000) return 8;
+    if (tc < 1000000) return 9;
     
-    if (current.type === "gold") {
-        state.balance += current.val;
-    } else if (current.type === "mult") {
-        state.tapPower = 10; // 2x Etkisi
-    } else if (current.type === "energy") {
-        if (state.energy >= 500) {
-            alert("Enerjin zaten dolu Efendim Kaan! Harca ve tekrar dene.");
-            return;
-        }
-        state.energy = 500;
+    // 10. Seviyeden sonrası için +200.000 döngüsü
+    let level = 10;
+    let base = 1000000;
+    for (let i = 11; i <= 20; i++) {
+        base += 200000;
+        if (tc < base) return level;
+        level = i;
     }
-
-    state.lastRewardClaim = now;
-    state.rewardDay++;
-    if (state.rewardDay > 7) state.rewardDay = 1; // Döngü başa döner
-
-    save();
-    updateUI();
-    renderRewardGrid();
-    alert(current.prize + " kazandın!");
+    return 20; // Max seviye
 }
 
 function tick() {
-    state.balance += (state.hourlyIncome / 3600);
+    let incomePerSec = (state.hourlyIncome / 3600);
+    state.balance += incomePerSec;
+    state.totalCollected += incomePerSec; // Toplam birikim artar
     if (state.energy < 500) state.energy += (500 / 10800);
     updateUI();
     save();
@@ -106,6 +92,9 @@ function updateUI() {
     document.getElementById('hourly-display').innerText = "+" + state.hourlyIncome + " KGn";
     document.getElementById('current-energy').innerText = Math.floor(state.energy);
     document.getElementById('energy-fill').style.width = (state.energy / 500 * 100) + "%";
+    
+    // Seviye Göstergesi Güncelleme
+    document.getElementById('level-display').innerText = "Seviye " + calculateLevel();
 
     const timer = document.getElementById('cooldown-timer');
     if (state.energy >= 500) timer.innerText = "Enerji Dolu";
@@ -118,7 +107,9 @@ function updateUI() {
 
 function handleTap(e) {
     if (state.energy >= 5) {
-        state.balance += state.tapPower; state.energy -= 5;
+        state.balance += state.tapPower;
+        state.totalCollected += state.tapPower; // Her tık seviyeye katkı sağlar
+        state.energy -= 5;
         let p = document.createElement('div'); p.className = 'plus-anim'; p.innerText = "+" + state.tapPower;
         let x = e.clientX || (e.touches ? e.touches[0].clientX : 0);
         let y = e.clientY || (e.touches ? e.touches[0].clientY : 0);
@@ -175,7 +166,7 @@ async function runRewardAd(type) {
     const AdController = window.Adsgram.init({ blockId: "23517" });
     AdController.show().then(() => {
         let now = Date.now(); let t = state.tasks[type];
-        if (type === 'gold') { state.balance += 100; t.count++; if (t.count >= 10) { t.hak--; t.count = 0; if (t.hak <= 0) { t.nextAvailable = now + (24*60*60*1000); t.hak = 1; } } }
+        if (type === 'gold') { state.balance += 100; state.totalCollected += 100; t.count++; if (t.count >= 10) { t.hak--; t.count = 0; if (t.hak <= 0) { t.nextAvailable = now + (24*60*60*1000); t.hak = 1; } } }
         else if (type === 'click') { t.count++; if (t.count >= 2) { state.tapPower = 10; t.count = 0; t.hak--; setTimeout(() => { state.tapPower = 5; }, 3600000); if (t.hak <= 0) { t.nextAvailable = now + (24*60*60*1000); t.hak = 3; } } }
         else if (type === 'energy') { t.count++; if (t.count >= 2) { state.energy = 500; t.count = 0; t.hak--; if (t.hak <= 0) { t.nextAvailable = now + (24*60*60*1000); t.hak = 3; } else { t.nextAvailable = now + (10*60*1000); } } }
         save(); renderTasks(); alert("Başarılı!");
@@ -195,6 +186,26 @@ function renderTasks() {
     }).join('');
 }
 
-function save() { state.lastUpdate = Date.now(); localStorage.setItem('kgn_coin_v21', JSON.stringify(state)); }
+function renderRewardGrid() {
+    const grid = document.getElementById('reward-days-list');
+    grid.innerHTML = dailyRewards.map(r => `
+        <div class="reward-day ${state.rewardDay == r.d ? 'active' : ''}">
+            <b>Gün ${r.d}</b><br>${r.prize}
+        </div>
+    `).join('');
+}
+
+function claimDailyReward() {
+    let now = Date.now();
+    if (now - state.lastRewardClaim < 86400000) { alert("Bugünkü ödülünü aldın!"); return; }
+    let current = dailyRewards[state.rewardDay - 1];
+    if (current.type === "gold") { state.balance += current.val; state.totalCollected += current.val; }
+    else if (current.type === "mult") { state.tapPower = 10; }
+    else if (current.type === "energy") { if (state.energy >= 500) { alert("Enerji dolu!"); return; } state.energy = 500; }
+    state.lastRewardClaim = now; state.rewardDay++; if (state.rewardDay > 7) state.rewardDay = 1;
+    save(); updateUI(); renderRewardGrid(); alert(current.prize + " kazandın!");
+}
+
+function save() { state.lastUpdate = Date.now(); localStorage.setItem('kgn_coin_v25', JSON.stringify(state)); }
 window.onload = init;
         
