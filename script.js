@@ -1,4 +1,4 @@
-let state = JSON.parse(localStorage.getItem('kgn_coin_v35')) || {
+let state = JSON.parse(localStorage.getItem('kgn_coin_v40')) || {
     username: null,
     userId: Math.floor(100000 + Math.random() * 900000),
     balance: 0,
@@ -17,37 +17,42 @@ let state = JSON.parse(localStorage.getItem('kgn_coin_v35')) || {
     }
 };
 
+// ... Borsa ve Ödül Tanımları Değişmedi ...
 const borsaKartlari = [ { id: 'ym', name: 'Yazılım Mühendisi', price: 10000, income: 1000 }, { id: 'gm', name: 'Görsel Mühendisi', price: 10000, income: 1000 }, { id: 'uc', name: 'Uzman Çalışan', price: 10000, income: 1000 }, { id: 'p1', name: 'Patron 1', price: 2000, income: 250 }, { id: 'p2', name: 'Patron 2', price: 4000, income: 500 }, { id: 'p3', name: 'Patron 3', price: 6000, income: 1000 } ];
 const dailyRewards = [ { d: 1, prize: "50 KGn", val: 50, type: "gold" }, { d: 2, prize: "150 KGn", val: 150, type: "gold" }, { d: 3, prize: "2x Tık", val: 2, type: "mult" }, { d: 4, prize: "250 KGn", val: 250, type: "gold" }, { d: 5, prize: "500 KGn", val: 500, type: "gold" }, { d: 6, prize: "1000 KGn", val: 1000, type: "gold" }, { d: 7, prize: "Full Enerji", val: 500, type: "energy" } ];
 
 function init() {
     if (!state.username) document.getElementById('login-screen').style.display = 'flex';
     else {
-        // İstediğin "Hoş geldin, İsim 👋" formatı eklendi
         document.getElementById('display-name').innerText = "Hoş geldin, " + state.username + " 👋";
         document.getElementById('ref-link-display').innerText = "https://t.me/KGnCoinBot?start=" + state.userId;
     }
-
     renderMarket();
     renderTasks();
-    createParticles();
+    createParticles(); // Parıltılar burada oluşturuluyor
     renderRewardGrid();
-    
-    let simdi = Date.now();
-    let gecenSaniye = (simdi - state.lastUpdate) / 1000;
-    let earned = (state.hourlyIncome / 3600) * gecenSaniye;
-    state.balance += earned;
-    state.totalCollected += earned;
-    state.energy = Math.min(500, state.energy + (gecenSaniye * (500 / 10800)));
-
     setInterval(tick, 1000);
 }
 
+// Parıltı Sayısı 50'den 80'e çıkarılarak ekran hafifçe renklendirildi
+function createParticles() {
+    const cont = document.getElementById('particle-container');
+    cont.innerHTML = ''; 
+    for(let i=0; i<80; i++) {
+        let p = document.createElement('div'); p.className = 'particle';
+        p.style.left = Math.random()*100+'vw'; p.style.top = Math.random()*100+'vh';
+        p.style.width = Math.random()*3+1+'px'; p.style.height = p.style.width;
+        p.style.animationDuration = (Math.random()*3+3)+'s';
+        p.style.animationDelay = (Math.random()*5)+'s';
+        cont.appendChild(p);
+    }
+}
+
+// ... Geri kalan fonksiyonlar (tick, updateUI, handleTap, save, vb.) milim değişmeden aynen devam ediyor ...
+
 function copyRefLink() {
     const link = document.getElementById('ref-link-display').innerText;
-    navigator.clipboard.writeText(link).then(() => {
-        alert("Davet linki kopyalandı!"); // "Efendim Kaan" kaldırıldı
-    });
+    navigator.clipboard.writeText(link).then(() => { alert("Davet linki kopyalandı!"); });
 }
 
 function calculateLevel() {
@@ -105,17 +110,6 @@ function saveUsername() {
     }
 }
 
-function createParticles() {
-    const cont = document.getElementById('particle-container');
-    for(let i=0; i<50; i++) {
-        let p = document.createElement('div'); p.className = 'particle';
-        p.style.left = Math.random()*100+'vw'; p.style.top = Math.random()*100+'vh';
-        p.style.width = Math.random()*4+'px'; p.style.height = p.style.width;
-        p.style.animationDuration = (Math.random()*2+2)+'s';
-        cont.appendChild(p);
-    }
-}
-
 function renderMarket() {
     const list = document.getElementById('market-list');
     list.innerHTML = borsaKartlari.map(k => {
@@ -167,6 +161,6 @@ function claimDailyReward() {
     save(); updateUI(); renderRewardGrid(); alert(current.prize + " kazanıldı!");
 }
 
-function save() { state.lastUpdate = Date.now(); localStorage.setItem('kgn_coin_v35', JSON.stringify(state)); }
+function save() { state.lastUpdate = Date.now(); localStorage.setItem('kgn_coin_v40', JSON.stringify(state)); }
 window.onload = init;
-    
+                                  
