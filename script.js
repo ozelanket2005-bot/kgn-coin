@@ -1,6 +1,6 @@
-let state = JSON.parse(localStorage.getItem('kgn_coin_v30')) || {
+let state = JSON.parse(localStorage.getItem('kgn_coin_v35')) || {
     username: null,
-    userId: Math.floor(100000 + Math.random() * 900000), // Kullanıcıya özel ID
+    userId: Math.floor(100000 + Math.random() * 900000),
     balance: 0,
     totalCollected: 0,
     hourlyIncome: 0,
@@ -17,15 +17,14 @@ let state = JSON.parse(localStorage.getItem('kgn_coin_v30')) || {
     }
 };
 
-// ... Borsa, Günlük Ödül ve Diğer Tanımlar (Hepsini Koruyorum) ...
 const borsaKartlari = [ { id: 'ym', name: 'Yazılım Mühendisi', price: 10000, income: 1000 }, { id: 'gm', name: 'Görsel Mühendisi', price: 10000, income: 1000 }, { id: 'uc', name: 'Uzman Çalışan', price: 10000, income: 1000 }, { id: 'p1', name: 'Patron 1', price: 2000, income: 250 }, { id: 'p2', name: 'Patron 2', price: 4000, income: 500 }, { id: 'p3', name: 'Patron 3', price: 6000, income: 1000 } ];
 const dailyRewards = [ { d: 1, prize: "50 KGn", val: 50, type: "gold" }, { d: 2, prize: "150 KGn", val: 150, type: "gold" }, { d: 3, prize: "2x Tık", val: 2, type: "mult" }, { d: 4, prize: "250 KGn", val: 250, type: "gold" }, { d: 5, prize: "500 KGn", val: 500, type: "gold" }, { d: 6, prize: "1000 KGn", val: 1000, type: "gold" }, { d: 7, prize: "Full Enerji", val: 500, type: "energy" } ];
 
 function init() {
     if (!state.username) document.getElementById('login-screen').style.display = 'flex';
     else {
-        document.getElementById('display-name').innerText = "👤 " + state.username;
-        // Referans linkini veritabanına uyumlu şekilde oluşturur
+        // İstediğin "Hoş geldin, İsim 👋" formatı eklendi
+        document.getElementById('display-name').innerText = "Hoş geldin, " + state.username + " 👋";
         document.getElementById('ref-link-display').innerText = "https://t.me/KGnCoinBot?start=" + state.userId;
     }
 
@@ -44,11 +43,10 @@ function init() {
     setInterval(tick, 1000);
 }
 
-// LİNK KOPYALAMA FONKSİYONU
 function copyRefLink() {
     const link = document.getElementById('ref-link-display').innerText;
     navigator.clipboard.writeText(link).then(() => {
-        alert("Davet linkin kopyalandı Efendim Kaan!");
+        alert("Davet linki kopyalandı!"); // "Efendim Kaan" kaldırıldı
     });
 }
 
@@ -101,7 +99,7 @@ function saveUsername() {
     if (input.trim().length > 2) {
         state.username = input;
         document.getElementById('login-screen').style.display = 'none';
-        document.getElementById('display-name').innerText = "👤 " + state.username;
+        document.getElementById('display-name').innerText = "Hoş geldin, " + state.username + " 👋";
         document.getElementById('ref-link-display').innerText = "https://t.me/KGnCoinBot?start=" + state.userId;
         save();
     }
@@ -130,7 +128,7 @@ function buyCard(id, price, income) {
     if (state.balance >= price) {
         state.balance -= price; state.hourlyIncome += income; state.inventory.push(id);
         renderMarket(); save();
-    } else alert("Yetersiz KGn!");
+    } else alert("Yetersiz bakiye!");
 }
 
 function showTab(tabId, el) {
@@ -140,20 +138,20 @@ function showTab(tabId, el) {
 }
 
 async function runRewardAd(type) {
-    if (typeof window.Adsgram === 'undefined') return alert("Reklam kütüphanesi yükleniyor...");
+    if (typeof window.Adsgram === 'undefined') return alert("Sistem yükleniyor, lütfen bekleyin.");
     const AdController = window.Adsgram.init({ blockId: "23517" });
     AdController.show().then(() => {
         let now = Date.now(); let t = state.tasks[type];
         if (type === 'gold') { state.balance += 100; state.totalCollected += 100; t.count++; if (t.count >= 10) { t.hak--; t.count = 0; if (t.hak <= 0) { t.nextAvailable = now + (24*60*60*1000); t.hak = 1; } } }
         else if (type === 'click') { t.count++; if (t.count >= 2) { state.tapPower = 10; t.count = 0; t.hak--; setTimeout(() => { state.tapPower = 5; }, 3600000); if (t.hak <= 0) { t.nextAvailable = now + (24*60*60*1000); t.hak = 3; } } }
         else if (type === 'energy') { t.count++; if (t.count >= 2) { state.energy = 500; t.count = 0; t.hak--; if (t.hak <= 0) { t.nextAvailable = now + (24*60*60*1000); t.hak = 3; } else { t.nextAvailable = now + (10*60*1000); } } }
-        save(); renderTasks(); alert("Başarılı!");
-    });
+        save(); renderTasks(); alert("Başarıyla tamamlandı!");
+    }).catch(() => { alert("Reklam şu an hazır değil, lütfen sonra tekrar deneyin."); });
 }
 
 function renderTasks() {
     const list = document.getElementById('task-list');
-    const tasksHTML = [ { id: 'gold', title: '10 Reklam İzle', desc: 'Reklam başı 100 KGn', cooldown: state.tasks.gold.nextAvailable }, { id: 'click', title: '2 Reklam İzle', desc: '1 Saat 2x Tık', cooldown: state.tasks.click.nextAvailable }, { id: 'energy', title: '2 Reklam İzle', desc: 'Enerji Fullenir', cooldown: state.tasks.energy.nextAvailable } ];
+    const tasksHTML = [ { id: 'gold', title: '10 Reklam İzle', desc: 'Reklam başı 100 KGn', cooldown: state.tasks.gold.nextAvailable }, { id: 'click', title: '2 Reklam İzle', desc: '1 Saat 2x Tık', cooldown: state.tasks.click.nextAvailable }, { id: 'energy', title: '2 Reklam İzle', desc: 'Enerji Yeniler', cooldown: state.tasks.energy.nextAvailable } ];
     list.innerHTML = tasksHTML.map(t => { let isWaiting = Date.now() < t.cooldown; return `<div class="task-card"><div><strong>${t.title}</strong><br><small>${t.desc}</small></div><button class="task-go-btn" ${isWaiting ? 'disabled' : ''} onclick="runRewardAd('${t.id}')">${isWaiting ? "BEKLE" : "İZLE"}</button></div>`; }).join('');
 }
 
@@ -163,12 +161,12 @@ function renderRewardGrid() {
 }
 
 function claimDailyReward() {
-    let now = Date.now(); if (now - state.lastRewardClaim < 86400000) { alert("Bugünkü ödülünü aldın!"); return; }
-    let current = dailyRewards[state.rewardDay - 1]; if (current.type === "gold") { state.balance += current.val; state.totalCollected += current.val; } else if (current.type === "mult") { state.tapPower = 10; } else if (current.type === "energy") { if (state.energy >= 500) { alert("Enerji dolu!"); return; } state.energy = 500; }
+    let now = Date.now(); if (now - state.lastRewardClaim < 86400000) { alert("Günlük ödülünüzü zaten aldınız."); return; }
+    let current = dailyRewards[state.rewardDay - 1]; if (current.type === "gold") { state.balance += current.val; state.totalCollected += current.val; } else if (current.type === "mult") { state.tapPower = 10; } else if (current.type === "energy") { if (state.energy >= 500) { alert("Enerjiniz zaten dolu!"); return; } state.energy = 500; }
     state.lastRewardClaim = now; state.rewardDay++; if (state.rewardDay > 7) state.rewardDay = 1;
-    save(); updateUI(); renderRewardGrid(); alert(current.prize + " kazandın!");
+    save(); updateUI(); renderRewardGrid(); alert(current.prize + " kazanıldı!");
 }
 
-function save() { state.lastUpdate = Date.now(); localStorage.setItem('kgn_coin_v30', JSON.stringify(state)); }
+function save() { state.lastUpdate = Date.now(); localStorage.setItem('kgn_coin_v35', JSON.stringify(state)); }
 window.onload = init;
-        
+    
