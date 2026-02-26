@@ -40,8 +40,9 @@ function init() {
     if (!state.username) document.getElementById('login-screen').style.display = 'flex';
     else {
         document.getElementById('display-name').innerText = "Hoş geldin, " + state.username + " 👋";
-        document.getElementById('ref-link-display').innerText = "https://t.me/KGnCoinBot?start=" + state.userId;
-        loadFriends(); // Arkadaş listesini çek
+        // HATALI LİNK BURADA DÜZELTİLDİ: Küçük harf kullanımı ve standart t.me formatı
+        document.getElementById('ref-link-display').innerText = "https://t.me/kgncoinbot?start=" + state.userId;
+        loadFriends();
     }
 
     renderMarket();
@@ -59,13 +60,10 @@ function init() {
     setInterval(tick, 1000);
 }
 
-// ARKADAŞ LİSTESİ ÇEKME (Gerçek Zamanlı Veritabanı Entegresi)
 function loadFriends() {
     const container = document.getElementById('friend-list-container');
     const countDisplay = document.getElementById('friend-count');
 
-    // Bu kısım senin veritabanın (örn: Firebase) ile bağlantılı çalışır.
-    // Şimdilik sistemin mantığını kuruyorum:
     if(window.db) {
         db.collection("users").where("invitedBy", "==", state.userId)
         .onSnapshot((querySnapshot) => {
@@ -143,6 +141,7 @@ function saveUsername() {
         state.username = input;
         document.getElementById('login-screen').style.display = 'none';
         document.getElementById('display-name').innerText = "Hoş geldin, " + state.username + " 👋";
+        document.getElementById('ref-link-display').innerText = "https://t.me/kgncoinbot?start=" + state.userId;
         save();
     }
 }
@@ -218,3 +217,4 @@ function copyRefLink() {
 
 function save() { state.lastUpdate = Date.now(); localStorage.setItem('kgn_coin_v50', JSON.stringify(state)); }
 window.onload = init;
+        
