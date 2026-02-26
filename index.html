@@ -28,7 +28,6 @@
         }
         .user-header { padding: 5px 20px; color: #ffd700; font-weight: bold; font-size: 14px; }
         
-        /* Günlük Ödül Modal */
         #reward-modal {
             display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
             width: 90%; background: #111; border: 2px solid #ffd700; border-radius: 20px;
@@ -38,6 +37,10 @@
         .reward-day { background: #222; border: 1px solid #333; padding: 5px; text-align: center; border-radius: 8px; font-size: 11px; }
         .reward-day.active { border-color: #ffd700; background: #2a2a00; }
         .close-btn { background: #ffd700; color: #000; border: none; padding: 8px; width: 100%; border-radius: 10px; margin-top: 15px; font-weight: bold; }
+        
+        /* Seviye Sistemi Stili */
+        .level-box { text-align: center; flex: 1; }
+        .level-text { color: #ffd700; font-weight: 800; font-size: 16px; text-shadow: 0 0 5px rgba(255,215,0,0.5); }
     </style>
 </head>
 <body>
@@ -63,6 +66,12 @@
             <small>SAATLİK KAZANÇ</small>
             <div id="hourly-display">+0 KGn</div>
         </div>
+
+        <div class="level-box">
+            <small>SEVİYENİZ</small>
+            <div id="level-display" class="level-text">Seviye 1</div>
+        </div>
+
         <div class="stat-box" style="text-align: right; cursor: pointer;" onclick="document.getElementById('reward-modal').style.display='block'">
             <small>GÜNLÜK ÖDÜL</small>
             <div style="color: #ffd700;">🎁 TIKLA</div>
@@ -104,7 +113,7 @@
         <div class="empty-state" style="text-align: center; padding-top: 50px;">
             <img src="https://cdn-icons-png.flaticon.com/512/2489/2489756.png" width="60">
             <h3>Cüzdan Menüsü</h3>
-            <p>Henüz gelmedi, bekleyiniz Efendim.</p>
+            <p>Henüz gelmedi, bekleyiniz Efendim Kaan.</p>
         </div>
     </div>
 
@@ -117,4 +126,5 @@
 
     <script src="script.js"></script>
 </body>
-</html>
+                    </html>
+    
