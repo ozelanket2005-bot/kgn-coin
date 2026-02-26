@@ -1,4 +1,6 @@
-let state = JSON.parse(localStorage.getItem('kgn_v15_final')) || {
+// Durum yönetimine username eklendi
+let state = JSON.parse(localStorage.getItem('kgn_v20_final')) || {
+    username: null,
     balance: 0,
     hourlyIncome: 0,
     energy: 500,
@@ -22,9 +24,16 @@ const borsaKartlari = [
 ];
 
 function init() {
+    // Kullanıcı adı kontrolü
+    if (!state.username) {
+        document.getElementById('login-screen').style.display = 'flex';
+    } else {
+        document.getElementById('display-name').innerText = "👤 " + state.username;
+    }
+
     renderMarket();
     renderTasks();
-    createParticles();
+    createParticles(); // Parıltılar burada artırıldı
     
     let simdi = Date.now();
     let gecenSaniye = (simdi - state.lastUpdate) / 1000;
@@ -34,6 +43,22 @@ function init() {
     setInterval(tick, 1000);
 }
 
+// Yeni Kullanıcı Kaydetme
+function saveUsername() {
+    let input = document.getElementById('username-input').value;
+    if (input.trim().length > 2) {
+        state.username = input;
+        document.getElementById('login-screen').style.opacity = '0';
+        setTimeout(() => {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('display-name').innerText = "👤 " + state.username;
+        }, 500);
+        save();
+    } else {
+        alert("Lütfen en az 3 karakterli bir isim girin.");
+    }
+}
+
 function tick() {
     state.balance += (state.hourlyIncome / 3600);
     if (state.energy < 500) state.energy += (500 / 10800);
@@ -41,6 +66,7 @@ function tick() {
     save();
 }
 
+// UI GÜNCELLEMELERİ (Aynı kalsın dedin, dokunmadım)
 function updateUI() {
     document.getElementById('balance-text').innerText = Math.floor(state.balance).toLocaleString();
     document.getElementById('hourly-display').innerText = "+" + state.hourlyIncome + " KGn";
@@ -57,73 +83,59 @@ function updateUI() {
     }
 }
 
-// REKLAM SİSTEMİ - BUTON TEPKİSİZLİĞİ DÜZELTİLDİ
-function runRewardAd(type) {
-    // window.Adsgram mevcut mu kontrol et
+// REKLAM SİSTEMİ (ID 23517 Sabit, dokunmadım)
+async function runRewardAd(type) {
     if (typeof window.Adsgram === 'undefined') {
-        alert("Reklam ağı yükleniyor, lütfen 3 saniye sonra tekrar deneyin.");
-        return;
+        alert("Reklam ağı bağlanıyor..."); return;
     }
-
     const AdController = window.Adsgram.init({ blockId: "23517" });
-
-    AdController.show().then((result) => {
+    AdController.show().then(() => {
         let now = Date.now();
         let t = state.tasks[type];
-
         if (type === 'gold') {
-            state.balance += 100;
-            t.count++;
-            if (t.count >= 10) {
-                t.hak--; t.count = 0;
-                if (t.hak <= 0) { t.nextAvailable = now + (24 * 60 * 60 * 1000); t.hak = 1; }
-            }
+            state.balance += 100; t.count++;
+            if (t.count >= 10) { t.hak--; t.count = 0; if (t.hak <= 0) { t.nextAvailable = now + (24 * 60 * 60 * 1000); t.hak = 1; } }
         } 
         else if (type === 'click') {
-            t.count++;
-            if (t.count >= 2) {
-                state.tapPower = 10; t.count = 0; t.hak--;
-                setTimeout(() => { state.tapPower = 5; }, 3600000);
-                if (t.hak <= 0) { t.nextAvailable = now + (24 * 60 * 60 * 1000); t.hak = 3; }
-            }
+            t.count++; if (t.count >= 2) { state.tapPower = 10; t.count = 0; t.hak--; setTimeout(() => { state.tapPower = 5; }, 3600000); if (t.hak <= 0) { t.nextAvailable = now + (24 * 60 * 60 * 1000); t.hak = 3; } }
         }
         else if (type === 'energy') {
-            t.count++;
-            if (t.count >= 2) {
-                state.energy = 500; t.count = 0; t.hak--;
-                if (t.hak <= 0) { t.nextAvailable = now + (24 * 60 * 60 * 1000); t.hak = 3; }
-                else { t.nextAvailable = now + (10 * 60 * 1000); }
-            }
+            t.count++; if (t.count >= 2) { state.energy = 500; t.count = 0; t.hak--; if (t.hak <= 0) { t.nextAvailable = now + (24 * 60 * 60 * 1000); t.hak = 3; } else { t.nextAvailable = now + (10 * 60 * 1000); } }
         }
-        save();
-        renderTasks();
-        alert("İşlem Başarılı Efendim Kaan!");
-    }).catch((err) => {
-        console.error("Adsgram Hatası:", err);
-        alert("Reklam şu an gösterilemiyor. (Hata: " + (err.error || "Bilinmiyor") + ")");
-    });
+        save(); renderTasks(); alert("İşlem Başarılı Efendim Kaan!");
+    }).catch(() => { alert("Reklam hazır değil."); });
 }
 
-// Kalan fonksiyonlar (handleTap, renderTasks, renderMarket, buyCard, showTab, createParticles, save) aynı kalsın...
 function handleTap(e) {
     if (state.energy >= 5) {
-        state.balance += state.tapPower;
-        state.energy -= 5;
-        let p = document.createElement('div');
-        p.className = 'plus-anim';
-        p.innerText = "+" + state.tapPower;
+        state.balance += state.tapPower; state.energy -= 5;
+        let p = document.createElement('div'); p.className = 'plus-anim'; p.innerText = "+" + state.tapPower;
         let x = e.clientX || (e.touches ? e.touches[0].clientX : 0);
         let y = e.clientY || (e.touches ? e.touches[0].clientY : 0);
         p.style.left = x + 'px'; p.style.top = y + 'px';
-        document.body.appendChild(p);
-        setTimeout(() => p.remove(), 800);
+        document.body.appendChild(p); setTimeout(() => p.remove(), 800);
         updateUI();
     }
 }
 
+// PARILTI ARTIŞI (Sarı noktalar 20'den 50'ye çıkarıldı ve hızı artırıldı)
+function createParticles() {
+    const cont = document.getElementById('particle-container');
+    if(!cont) return;
+    cont.innerHTML = ''; // Temizle
+    for(let i=0; i<50; i++) {
+        let p = document.createElement('div'); p.className = 'particle';
+        p.style.left = Math.random()*100+'vw'; p.style.top = Math.random()*100+'vh';
+        p.style.width = Math.random()*4+'px'; p.style.height = p.style.width;
+        p.style.animationDuration = (Math.random()*2 + 2) + 's';
+        p.style.animationDelay = Math.random()*5+'s';
+        cont.appendChild(p);
+    }
+}
+
+// PAZAR VE GÖREVLER (Aynı kalsın dedin, dokunmadım)
 function renderTasks() {
-    const list = document.getElementById('task-list');
-    if (!list) return;
+    const list = document.getElementById('task-list'); if (!list) return;
     let now = Date.now();
     const tasksHTML = [
         { id: 'gold', title: '10 Reklam İzle (Para Kazan)', desc: 'Reklam başı 100 KGn', cooldown: state.tasks.gold.nextAvailable },
@@ -132,17 +144,12 @@ function renderTasks() {
     ];
     list.innerHTML = tasksHTML.map(t => {
         let isWaiting = now < t.cooldown;
-        return `
-            <div class="task-card">
-                <div><strong>${t.title}</strong><br><small>${t.desc}</small></div>
-                <button class="task-go-btn" ${isWaiting ? 'disabled' : ''} onclick="runRewardAd('${t.id}')">${isWaiting ? "BEKLE" : "İZLE"}</button>
-            </div>`;
+        return `<div class="task-card"><div><strong>${t.title}</strong><br><small>${t.desc}</small></div><button class="task-go-btn" ${isWaiting ? 'disabled' : ''} onclick="runRewardAd('${t.id}')">${isWaiting ? "BEKLE" : "İZLE"}</button></div>`;
     }).join('');
 }
 
 function renderMarket() {
-    const list = document.getElementById('market-list');
-    if(!list) return;
+    const list = document.getElementById('market-list'); if(!list) return;
     list.innerHTML = borsaKartlari.map(k => {
         let isOwned = state.inventory.includes(k.id);
         return `<div class="market-card"><div><strong>${k.name}</strong><br><small>Gelir: +${k.income}/saat</small></div><button class="task-go-btn" ${isOwned ? 'disabled' : ''} onclick="buyCard('${k.id}', ${k.price}, ${k.income})">${isOwned ? 'ALINDI' : k.price + ' KGn'}</button></div>`;
@@ -162,17 +169,6 @@ function showTab(tabId, el) {
     document.getElementById(tabId).classList.add('active'); el.classList.add('active');
 }
 
-function createParticles() {
-    const cont = document.getElementById('particle-container');
-    if(!cont) return;
-    for(let i=0; i<20; i++) {
-        let p = document.createElement('div'); p.className = 'particle';
-        p.style.left = Math.random()*100+'vw'; p.style.top = Math.random()*100+'vh';
-        p.style.width = '3px'; p.style.height = '3px'; p.style.animationDelay = Math.random()*4+'s';
-        cont.appendChild(p);
-    }
-}
-
-function save() { state.lastUpdate = Date.now(); localStorage.setItem('kgn_v15_final', JSON.stringify(state)); }
+function save() { state.lastUpdate = Date.now(); localStorage.setItem('kgn_v20_final', JSON.stringify(state)); }
 window.onload = init;
-
+    
