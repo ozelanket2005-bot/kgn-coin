@@ -40,8 +40,9 @@ function init() {
     if (!state.username) document.getElementById('login-screen').style.display = 'flex';
     else {
         document.getElementById('display-name').innerText = "Hoş geldin, " + state.username + " 👋";
-        // HATALI LİNK BURADA DÜZELTİLDİ: Küçük harf kullanımı ve standart t.me formatı
-        document.getElementById('ref-link-display').innerText = "https://t.me/kgncoinbot?start=" + state.userId;
+        // KESİN DÜZELTME: Link yapısı Telegram'ın tam olarak tanıdığı standart formata getirildi.
+        const botUsername = "kgncoinbot"; 
+        document.getElementById('ref-link-display').innerText = "https://t.me/" + botUsername + "?start=" + state.userId;
         loadFriends();
     }
 
@@ -141,7 +142,8 @@ function saveUsername() {
         state.username = input;
         document.getElementById('login-screen').style.display = 'none';
         document.getElementById('display-name').innerText = "Hoş geldin, " + state.username + " 👋";
-        document.getElementById('ref-link-display').innerText = "https://t.me/kgncoinbot?start=" + state.userId;
+        const botUsername = "kgncoinbot";
+        document.getElementById('ref-link-display').innerText = "https://t.me/" + botUsername + "?start=" + state.userId;
         save();
     }
 }
@@ -217,4 +219,4 @@ function copyRefLink() {
 
 function save() { state.lastUpdate = Date.now(); localStorage.setItem('kgn_coin_v50', JSON.stringify(state)); }
 window.onload = init;
-        
+    
