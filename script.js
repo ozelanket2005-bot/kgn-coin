@@ -40,8 +40,8 @@ function init() {
     if (!state.username) document.getElementById('login-screen').style.display = 'flex';
     else {
         document.getElementById('display-name').innerText = "Hoş geldin, " + state.username + " 👋";
-        // KESİN DÜZELTME: Link yapısı Telegram'ın tam olarak tanıdığı standart formata getirildi.
-        const botUsername = "kgncoinbot"; 
+        // EKRAN GÖRÜNTÜSÜNDEKİ RESMİ BOT ADI İLE GÜNCELLENDİ
+        const botUsername = "KGn_coin_bot"; 
         document.getElementById('ref-link-display').innerText = "https://t.me/" + botUsername + "?start=" + state.userId;
         loadFriends();
     }
@@ -142,7 +142,7 @@ function saveUsername() {
         state.username = input;
         document.getElementById('login-screen').style.display = 'none';
         document.getElementById('display-name').innerText = "Hoş geldin, " + state.username + " 👋";
-        const botUsername = "kgncoinbot";
+        const botUsername = "KGn_coin_bot";
         document.getElementById('ref-link-display').innerText = "https://t.me/" + botUsername + "?start=" + state.userId;
         save();
     }
@@ -219,4 +219,3 @@ function copyRefLink() {
 
 function save() { state.lastUpdate = Date.now(); localStorage.setItem('kgn_coin_v50', JSON.stringify(state)); }
 window.onload = init;
-    
