@@ -10,14 +10,9 @@ let state = JSON.parse(localStorage.getItem('kgn_coin_v50')) || {
     lastUpdate: Date.now(),
     lastRewardClaim: 0,
     rewardDay: 1,
-    tasks: {
-        click: { count: 0, hak: 3, nextAvailable: 0 },
-        energy: { count: 0, hak: 3, nextAvailable: 0 },
-        gold: { count: 0, hak: 1, nextAvailable: 0 }
-    }
+    tasks: { click: { count: 0, hak: 3, nextAvailable: 0 }, energy: { count: 0, hak: 3, nextAvailable: 0 }, gold: { count: 0, hak: 1, nextAvailable: 0 } }
 };
 
-// GÜNCEL BORSA FİYATLARI VE GETİRİLERİ
 const borsaKartlari = [ 
     { id: 'ym', name: 'Yazılım Mühendisi', price: 50000, income: 1000 }, 
     { id: 'gm', name: 'Görsel Mühendisi', price: 70000, income: 2000 }, 
@@ -30,7 +25,7 @@ const borsaKartlari = [
 const dailyRewards = [ 
     { d: 1, prize: "50 KGn", val: 50, type: "gold" }, 
     { d: 2, prize: "150 KGn", val: 150, type: "gold" }, 
-    { d: 3, prize: "1 Saat 2x Tık", val: 10, type: "mult" }, // 10 yapıyoruz (+5 normal)
+    { d: 3, prize: "1 Saat 2x Tık", val: 10, type: "mult" }, 
     { d: 4, prize: "250 KGn", val: 250, type: "gold" }, 
     { d: 5, prize: "500 KGn", val: 500, type: "gold" }, 
     { d: 6, prize: "1000 KGn", val: 1000, type: "gold" }, 
@@ -43,73 +38,23 @@ function init() {
         document.getElementById('display-name').innerText = "Hoş geldin, " + state.username + " 👋";
         const botUsername = "KGn_coin_bot"; 
         document.getElementById('ref-link-display').innerText = "https://t.me/" + botUsername + "?start=" + state.userId;
-        
-        // GÜNLÜK ÖDÜL SIFIRLAMA KONTROLÜ
         checkDailyRewardReset();
         loadFriends();
     }
-
-    renderMarket();
-    renderTasks();
-    createParticles();
-    renderRewardGrid();
-    
-    let simdi = Date.now();
-    let gecenSaniye = (simdi - state.lastUpdate) / 1000;
-    let earned = (state.hourlyIncome / 3600) * gecenSaniye;
-    state.balance += earned;
-    state.totalCollected += earned;
-    state.energy = Math.min(500, state.energy + (gecenSaniye * (500 / 10800)));
-
+    renderMarket(); renderTasks(); createParticles(); renderRewardGrid();
     setInterval(tick, 1000);
-    showTab('game-tab', document.querySelector('.nav-btn.active'));
 }
 
-// ARKADAŞ LİSTESİ CANLI VERİ
-function loadFriends() {
-    const container = document.getElementById('friend-list-container');
-    const countDisplay = document.getElementById('friend-count');
-
-    // Eğer Firebase kullanıyorsan bu blok otomatik çalışır. Local için simülasyon:
-    if(window.db) {
-        db.collection("users").where("invitedBy", "==", state.userId)
-        .onSnapshot((snapshot) => {
-            countDisplay.innerText = snapshot.size;
-            if(!snapshot.empty) {
-                container.innerHTML = snapshot.docs.map(doc => {
-                    const f = doc.data();
-                    return `
-                        <div class="friend-item">
-                            <div><strong style="color:white">${f.username}</strong></div>
-                            <div style="color:#ffd700; font-weight:bold">${Math.floor(f.balance).toLocaleString()} KGn</div>
-                        </div>`;
-                }).join('');
-            }
-        });
-    }
-}
-
-// EĞER GÜN ATLANIRSA ÖDÜLÜ 1. GÜNE SIFIRLA
 function checkDailyRewardReset() {
     let simdi = Date.now();
-    let birGunSaniye = 86400000;
-    let ikiGunSaniye = 172800000;
-
-    if (state.lastRewardClaim > 0) {
-        if (simdi - state.lastRewardClaim > ikiGunSaniye) {
-            state.rewardDay = 1;
-            save();
-        }
-    }
+    if (state.lastRewardClaim > 0 && (simdi - state.lastRewardClaim > 172800000)) { state.rewardDay = 1; save(); }
 }
 
 function tick() {
     let incomePerSec = (state.hourlyIncome / 3600);
-    state.balance += incomePerSec;
-    state.totalCollected += incomePerSec;
+    state.balance += incomePerSec; state.totalCollected += incomePerSec;
     if (state.energy < 500) state.energy += (500 / 10800);
-    updateUI();
-    save();
+    updateUI(); save();
 }
 
 function updateUI() {
@@ -118,6 +63,20 @@ function updateUI() {
     document.getElementById('current-energy').innerText = Math.floor(state.energy);
     document.getElementById('energy-fill').style.width = (state.energy / 500 * 100) + "%";
     document.getElementById('level-display').innerText = "Seviye " + calculateLevel();
+}
+
+function showTab(tabId, el) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(n => n.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active'); el.classList.add('active');
+
+    // SADECE OYUN SEKEMESİNDE PANELİ GÖSTER
+    const gamePanel = document.getElementById('only-game-header');
+    if (tabId === 'game-tab') {
+        gamePanel.style.display = 'block';
+    } else {
+        gamePanel.style.display = 'none';
+    }
 }
 
 function handleTap(e) {
@@ -132,61 +91,36 @@ function handleTap(e) {
     }
 }
 
-function showTab(tabId, el) {
-    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.nav-btn').forEach(n => n.classList.remove('active'));
-    document.getElementById(tabId).classList.add('active'); 
-    el.classList.add('active');
-
-    // SEKME KONTROLLERİ
-    const header = document.getElementById('game-stats-header');
-    const balance = document.getElementById('global-balance-container');
-
-    if (tabId === 'game-tab') {
-        header.style.display = 'flex';
-        balance.style.display = 'block';
-    } else if (tabId === 'market-tab') {
-        header.style.display = 'none';
-        balance.style.display = 'block';
-    } else {
-        header.style.display = 'none';
-        balance.style.display = 'none';
-    }
-}
-
 function claimDailyReward() {
     let now = Date.now();
     if (now - state.lastRewardClaim < 86400000) { alert("Bugünkü ödülünüzü zaten aldınız!"); return; }
-    
     let current = dailyRewards[state.rewardDay - 1];
-    if (current.type === "gold") { 
-        state.balance += current.val; state.totalCollected += current.val; 
-    } else if (current.type === "mult") { 
-        state.tapPower = 10; 
-        setTimeout(() => { state.tapPower = 5; save(); }, 3600000); // 1 SAAT SONRA SIFIRLA
-    } else if (current.type === "energy") { 
-        state.energy = 500; 
-    }
-    
-    state.lastRewardClaim = now;
-    state.rewardDay++;
-    if (state.rewardDay > 7) state.rewardDay = 1;
-    save(); updateUI(); renderRewardGrid();
-    alert(current.prize + " kazandınız!");
+    if (current.type === "gold") { state.balance += current.val; state.totalCollected += current.val; } 
+    else if (current.type === "mult") { state.tapPower = 10; setTimeout(() => { state.tapPower = 5; save(); }, 3600000); } 
+    else if (current.type === "energy") { state.energy = 500; }
+    state.lastRewardClaim = now; state.rewardDay++; if (state.rewardDay > 7) state.rewardDay = 1;
+    save(); updateUI(); renderRewardGrid(); alert(current.prize + " kazandınız!");
 }
 
 function renderMarket() {
     const list = document.getElementById('market-list');
     list.innerHTML = borsaKartlari.map(k => {
         let isOwned = state.inventory.includes(k.id);
-        return `<div class="market-card">
-            <div style="font-size:12px; height:40px"><strong>${k.name}</strong></div>
-            <div style="color:#ffd700; font-size:11px; margin:5px 0">+${k.income}/saat</div>
-            <button class="task-go-btn" style="font-size:10px; padding:5px" ${isOwned ? 'disabled' : ''} onclick="buyCard('${k.id}', ${k.price}, ${k.income})">
-                ${isOwned ? 'ALINDI' : k.price + ' KGn'}
-            </button>
-        </div>`;
+        return `<div class="market-card"><div style="font-size:12px; height:40px"><strong>${k.name}</strong></div><div style="color:#ffd700; font-size:11px; margin:5px 0">+${k.income}/saat</div><button class="task-go-btn" style="font-size:10px; padding:5px" ${isOwned ? 'disabled' : ''} onclick="buyCard('${k.id}', ${k.price}, ${k.income})">${isOwned ? 'ALINDI' : k.price + ' KGn'}</button></div>`;
     }).join('');
+}
+
+function loadFriends() {
+    const container = document.getElementById('friend-list-container');
+    if(window.db) {
+        db.collection("users").where("invitedBy", "==", state.userId).onSnapshot((snapshot) => {
+            document.getElementById('friend-count').innerText = snapshot.size;
+            container.innerHTML = snapshot.docs.map(doc => {
+                const f = doc.data();
+                return `<div class="friend-item"><div><strong>${f.username}</strong></div><div style="color:#ffd700; font-weight:bold">${Math.floor(f.balance).toLocaleString()} KGn</div></div>`;
+            }).join('');
+        });
+    }
 }
 
 function calculateLevel() {
@@ -197,12 +131,7 @@ function calculateLevel() {
 
 function saveUsername() {
     let input = document.getElementById('username-input').value;
-    if (input.trim().length > 2) {
-        state.username = input;
-        document.getElementById('login-screen').style.display = 'none';
-        init();
-        save();
-    }
+    if (input.trim().length > 2) { state.username = input; document.getElementById('login-screen').style.display = 'none'; init(); save(); }
 }
 
 function renderTasks() {
@@ -216,31 +145,9 @@ function renderRewardGrid() {
     grid.innerHTML = dailyRewards.map(r => `<div class="reward-day ${state.rewardDay == r.d ? 'active' : ''}"><b>Gün ${r.d}</b><br>${r.prize}</div>`).join('');
 }
 
-function copyRefLink() {
-    const link = document.getElementById('ref-link-display').innerText;
-    navigator.clipboard.writeText(link).then(() => { alert("Davet linki kopyalandı!"); });
-}
-
-function buyCard(id, price, income) {
-    if (state.balance >= price) {
-        state.balance -= price; state.hourlyIncome += income; state.inventory.push(id);
-        renderMarket(); save();
-    } else alert("Yetersiz bakiye!");
-}
-
-function createParticles() {
-    const cont = document.getElementById('particle-container');
-    cont.innerHTML = ''; 
-    for(let i=0; i<80; i++) {
-        let p = document.createElement('div'); p.className = 'particle';
-        p.style.left = Math.random()*100+'vw'; p.style.top = Math.random()*100+'vh';
-        p.style.width = Math.random()*3+1+'px'; p.style.height = p.style.width;
-        p.style.animationDuration = (Math.random()*3+3)+'s';
-        p.style.animationDelay = (Math.random()*5)+'s';
-        cont.appendChild(p);
-    }
-}
-
+function copyRefLink() { const link = document.getElementById('ref-link-display').innerText; navigator.clipboard.writeText(link).then(() => { alert("Davet linki kopyalandı!"); }); }
+function buyCard(id, price, income) { if (state.balance >= price) { state.balance -= price; state.hourlyIncome += income; state.inventory.push(id); renderMarket(); save(); } else alert("Yetersiz bakiye!"); }
+function createParticles() { const cont = document.getElementById('particle-container'); cont.innerHTML = ''; for(let i=0; i<80; i++) { let p = document.createElement('div'); p.className = 'particle'; p.style.left = Math.random()*100+'vw'; p.style.top = Math.random()*100+'vh'; p.style.width = Math.random()*3+1+'px'; p.style.height = p.style.width; p.style.animationDuration = (Math.random()*3+3)+'s'; p.style.animationDelay = (Math.random()*5)+'s'; cont.appendChild(p); } }
 function save() { state.lastUpdate = Date.now(); localStorage.setItem('kgn_coin_v50', JSON.stringify(state)); }
 window.onload = init;
-    
+        
