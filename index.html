@@ -59,22 +59,9 @@
             100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
         }
 
-        .friend-item {
-            display: flex; justify-content: space-between; align-items: center;
-            background: #1a1a1a; padding: 12px; border-radius: 10px;
-            margin-bottom: 8px; border-left: 3px solid #ffd700;
-        }
-
-        /* Borsa Yan Yana Düzeni */
-        .market-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            padding: 10px;
-        }
-        .market-card {
-            background: #111; border: 1px solid #333; padding: 15px; border-radius: 12px; text-align: center;
-        }
+        .market-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px; }
+        .market-card { background: #111; border: 1px solid #333; padding: 15px; border-radius: 12px; text-align: center; }
+        .friend-item { display: flex; justify-content: space-between; align-items: center; background: #1a1a1a; padding: 12px; border-radius: 10px; margin-bottom: 8px; border-left: 3px solid #ffd700; }
     </style>
 </head>
 <body>
@@ -95,46 +82,25 @@
     <div id="particle-container"></div>
     <div class="user-header" id="display-name"></div>
 
-    <div id="game-stats-header" class="top-stats">
-        <div class="stat-box">
-            <small>SAATLİK KAZANÇ</small>
-            <div id="hourly-display">+0 KGn</div>
+    <div id="only-game-header">
+        <div class="top-stats">
+            <div class="stat-box">
+                <small>SAATLİK KAZANÇ</small>
+                <div id="hourly-display">+0 KGn</div>
+            </div>
+            <div class="level-box">
+                <small>SEVİYENİZ</small>
+                <div id="level-display" class="level-text">Seviye 1</div>
+            </div>
+            <div class="stat-box" style="text-align: right; cursor: pointer;" onclick="document.getElementById('reward-modal').style.display='block'">
+                <small>GÜNLÜK ÖDÜL</small>
+                <div style="color: #ffd700;">🎁 TIKLA</div>
+            </div>
         </div>
-        <div class="level-box">
-            <small>SEVİYENİZ</small>
-            <div id="level-display" class="level-text">Seviye 1</div>
-        </div>
-        <div class="stat-box" style="text-align: right; cursor: pointer;" onclick="document.getElementById('reward-modal').style.display='block'">
-            <small>GÜNLÜK ÖDÜL</small>
-            <div style="color: #ffd700;">🎁 TIKLA</div>
-        </div>
-    </div>
 
-    <div id="global-balance-container" style="display: none;">
         <div id="balance-container">
             <span id="balance-text">0</span> <span style="color: #ffd700;">KGn</span>
         </div>
-    </div>
-
-    <div id="invite-tab" class="tab-content">
-        <h2 class="section-title">Arkadaşlarını Davet Et</h2>
-        <div class="invite-box">
-            <p>%10 Komisyon ile Hem Arkadaşın Hem Sen Kazan!</p>
-            <div class="referral-link" id="ref-link-display">Link Oluşturuluyor...</div>
-            <button class="task-go-btn" onclick="copyRefLink()">LİNKİ KOPYALA</button>
-        </div>
-        
-        <div style="margin-top: 25px;">
-            <h3 style="color: #ffd700; font-size: 18px; margin-bottom: 10px;">Arkadaşlar (<span id="friend-count">0</span>)</h3>
-            <div id="friend-list-container" class="scroll-area" style="max-height: 250px;">
-                <p style="color: #666; text-align: center; margin-top: 20px;">Henüz kimse davet edilmedi.</p>
-            </div>
-        </div>
-    </div>
-
-    <div id="tasks-tab" class="tab-content">
-        <h2 class="section-title">Görevler</h2>
-        <div class="scroll-area" id="task-list"></div>
     </div>
 
     <div id="game-tab" class="tab-content active">
@@ -152,6 +118,24 @@
                 <span id="cooldown-timer">Enerji Dolu</span>
             </div>
         </div>
+    </div>
+
+    <div id="invite-tab" class="tab-content">
+        <h2 class="section-title">Arkadaşlarını Davet Et</h2>
+        <div class="invite-box">
+            <p>%10 Komisyon ile Hem Arkadaşın Hem Sen Kazan!</p>
+            <div class="referral-link" id="ref-link-display">Link Oluşturuluyor...</div>
+            <button class="task-go-btn" onclick="copyRefLink()">LİNKİ KOPYALA</button>
+        </div>
+        <div style="margin-top: 25px;">
+            <h3 style="color: #ffd700; font-size: 18px; margin-bottom: 10px;">Arkadaşlar (<span id="friend-count">0</span>)</h3>
+            <div id="friend-list-container" class="scroll-area" style="max-height: 250px;"></div>
+        </div>
+    </div>
+
+    <div id="tasks-tab" class="tab-content">
+        <h2 class="section-title">Görevler</h2>
+        <div class="scroll-area" id="task-list"></div>
     </div>
 
     <div id="market-tab" class="tab-content">
