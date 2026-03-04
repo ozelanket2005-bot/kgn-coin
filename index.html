@@ -64,6 +64,17 @@
             background: #1a1a1a; padding: 12px; border-radius: 10px;
             margin-bottom: 8px; border-left: 3px solid #ffd700;
         }
+
+        /* Borsa Yan Yana Düzeni */
+        .market-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            padding: 10px;
+        }
+        .market-card {
+            background: #111; border: 1px solid #333; padding: 15px; border-radius: 12px; text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -84,7 +95,7 @@
     <div id="particle-container"></div>
     <div class="user-header" id="display-name"></div>
 
-    <div class="top-stats">
+    <div id="game-stats-header" class="top-stats">
         <div class="stat-box">
             <small>SAATLİK KAZANÇ</small>
             <div id="hourly-display">+0 KGn</div>
@@ -99,8 +110,10 @@
         </div>
     </div>
 
-    <div id="balance-container">
-        <span id="balance-text">0</span> <span style="color: #ffd700;">KGn</span>
+    <div id="global-balance-container" style="display: none;">
+        <div id="balance-container">
+            <span id="balance-text">0</span> <span style="color: #ffd700;">KGn</span>
+        </div>
     </div>
 
     <div id="invite-tab" class="tab-content">
@@ -143,7 +156,7 @@
 
     <div id="market-tab" class="tab-content">
         <h2 class="section-title">Sanal Ofis (Borsa)</h2>
-        <div id="market-list" class="scroll-area"></div>
+        <div id="market-list" class="market-grid"></div>
     </div>
 
     <div id="wallet-tab" class="tab-content">
@@ -151,7 +164,6 @@
             <img src="https://cdn-icons-png.flaticon.com/512/2489/2489756.png" width="60">
             <h3>Cüzdan Menüsü</h3>
             <p>Yakında aktif edilecektir.</p>
-            <p style="color: #ffd700; font-size: 14px; margin-top: 10px;">KGn birikimlerinize devam ediniz:)</p>
         </div>
     </div>
 
