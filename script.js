@@ -1,153 +1,252 @@
-let state = JSON.parse(localStorage.getItem('kgn_coin_v50')) || {
+// DURUM YÖNETİMİ
+let state = JSON.parse(localStorage.getItem('kgn_v2026')) || {
     username: null,
     userId: Math.floor(100000 + Math.random() * 900000),
     balance: 0,
-    totalCollected: 0,
     hourlyIncome: 0,
     energy: 500,
+    lastUpdate: Date.now(),
     inventory: [],
     tapPower: 5,
-    lastUpdate: Date.now(),
-    lastRewardClaim: 0,
-    rewardDay: 1,
-    tasks: { click: { count: 0, hak: 3, nextAvailable: 0 }, energy: { count: 0, hak: 3, nextAvailable: 0 }, gold: { count: 0, hak: 1, nextAvailable: 0 } }
+    tasks: {
+        gold: { count: 0, hak: 1, cooldown: 0 },   // 10 reklam için
+        click: { count: 0, hak: 3, cooldown: 0 },  // 2x tık için
+        energy: { count: 0, hak: 3, cooldown: 0 }  // enerji için
+    }
 };
 
-const borsaKartlari = [ 
-    { id: 'ym', name: 'Yazılım Mühendisi', price: 50000, income: 1000 }, 
-    { id: 'gm', name: 'Görsel Mühendisi', price: 70000, income: 2000 }, 
-    { id: 'uc', name: 'Uzman Çalışan', price: 60000, income: 1500 }, 
-    { id: 'p1', name: 'Patron 1', price: 5000, income: 250 }, 
-    { id: 'p2', name: 'Patron 2', price: 25000, income: 500 }, 
-    { id: 'p3', name: 'Patron 3', price: 40000, income: 1000 } 
-];
-
-const dailyRewards = [ 
-    { d: 1, prize: "50 KGn", val: 50, type: "gold" }, 
-    { d: 2, prize: "150 KGn", val: 150, type: "gold" }, 
-    { d: 3, prize: "1 Saat 2x Tık", val: 10, type: "mult" }, 
-    { d: 4, prize: "250 KGn", val: 250, type: "gold" }, 
-    { d: 5, prize: "500 KGn", val: 500, type: "gold" }, 
-    { d: 6, prize: "1000 KGn", val: 1000, type: "gold" }, 
-    { d: 7, prize: "Full Enerji", val: 500, type: "energy" } 
+const marketItems = [
+    { id: 'ym', name: 'Yazılım Mühendisi', price: 5000, income: 1000 },
+    { id: 'gm', name: 'Görsel Mühendisi', price: 5000, income: 1000 },
+    { id: 'uc', name: 'Uzman Çalışan', price: 5000, income: 1000 },
+    { id: 'p1', name: 'Patron 1', price: 1000, income: 250 },
+    { id: 'p2', name: 'Patron 2', price: 2000, income: 500 },
+    { id: 'p3', name: 'Patron 3', price: 3000, income: 1000 }
 ];
 
 function init() {
-    if (!state.username) document.getElementById('login-screen').style.display = 'flex';
-    else {
-        document.getElementById('display-name').innerText = "Hoş geldin, " + state.username + " 👋";
-        const botUsername = "KGn_coin_bot"; 
-        document.getElementById('ref-link-display').innerText = "https://t.me/" + botUsername + "?start=" + state.userId;
-        checkDailyRewardReset();
-        loadFriends();
+    if (!state.username) {
+        document.getElementById('login-screen').style.display = 'flex';
+    } else {
+        document.getElementById('ref-link').innerText = "https://t.me/KGn_coin_bot?start=" + state.userId;
+        calculateOfflineEarnings();
+        setInterval(gameLoop, 1000);
+        renderMarket();
+        renderTasks();
+        createParticles();
     }
-    renderMarket(); renderTasks(); createParticles(); renderRewardGrid();
-    setInterval(tick, 1000);
 }
 
-function checkDailyRewardReset() {
-    let simdi = Date.now();
-    if (state.lastRewardClaim > 0 && (simdi - state.lastRewardClaim > 172800000)) { state.rewardDay = 1; save(); }
-}
-
-function tick() {
-    let incomePerSec = (state.hourlyIncome / 3600);
-    state.balance += incomePerSec; state.totalCollected += incomePerSec;
-    if (state.energy < 500) state.energy += (500 / 10800);
-    updateUI(); save();
+// OYUN DÖNGÜSÜ
+function gameLoop() {
+    let now = Date.now();
+    let diff = (now - state.lastUpdate) / 1000;
+    
+    // Saatlik kazanç ekle (Saniye bazlı)
+    let incomePerSec = state.hourlyIncome / 3600;
+    state.balance += incomePerSec;
+    
+    // Enerji Yenilenmesi (3 saatte full = 500/10800 saniye)
+    if (state.energy < 500) {
+        state.energy += (500 / 10800);
+    }
+    
+    state.lastUpdate = now;
+    updateUI();
+    save();
 }
 
 function updateUI() {
     document.getElementById('balance-text').innerText = Math.floor(state.balance).toLocaleString();
-    document.getElementById('hourly-display').innerText = "+" + state.hourlyIncome + " KGn";
+    document.getElementById('hourly-display').innerText = "+" + state.hourlyIncome;
     document.getElementById('current-energy').innerText = Math.floor(state.energy);
     document.getElementById('energy-fill').style.width = (state.energy / 500 * 100) + "%";
-    document.getElementById('level-display').innerText = "Seviye " + calculateLevel();
-}
-
-function showTab(tabId, el) {
-    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.nav-btn').forEach(n => n.classList.remove('active'));
-    document.getElementById(tabId).classList.add('active'); el.classList.add('active');
-
-    // SADECE OYUN SEKEMESİNDE PANELİ GÖSTER
-    const gamePanel = document.getElementById('only-game-header');
-    if (tabId === 'game-tab') {
-        gamePanel.style.display = 'block';
+    
+    // Enerji Geri Sayım
+    let timer = document.getElementById('cooldown-timer');
+    if (state.energy >= 500) {
+        timer.innerText = "Enerji Dolu";
     } else {
-        gamePanel.style.display = 'none';
+        let remainingSeconds = Math.floor((500 - state.energy) / (500 / 10800));
+        let h = Math.floor(remainingSeconds / 3600);
+        let m = Math.floor((remainingSeconds % 3600) / 60);
+        let s = remainingSeconds % 60;
+        timer.innerText = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
     }
 }
 
+// TIKLAMA MEKANİĞİ
 function handleTap(e) {
     if (state.energy >= 5) {
-        state.balance += state.tapPower; state.totalCollected += state.tapPower; state.energy -= 5;
-        let p = document.createElement('div'); p.className = 'plus-anim'; p.innerText = "+" + state.tapPower;
-        let x = e.clientX || (e.touches ? e.touches[0].clientX : 0);
-        let y = e.clientY || (e.touches ? e.touches[0].clientY : 0);
-        p.style.left = x + 'px'; p.style.top = y + 'px';
-        document.body.appendChild(p); setTimeout(() => p.remove(), 800);
+        state.balance += state.tapPower;
+        state.energy -= 5;
+        
+        // Animasyon
+        let p = document.createElement('div');
+        p.className = 'plus-anim';
+        p.innerText = "+" + state.tapPower;
+        let x = e.clientX || (e.touches ? e.touches[0].clientX : window.innerWidth/2);
+        let y = e.clientY || (e.touches ? e.touches[0].clientY : window.innerHeight/2);
+        p.style.left = x + 'px';
+        p.style.top = y + 'px';
+        document.body.appendChild(p);
+        setTimeout(() => p.remove(), 800);
+        
         updateUI();
     }
 }
 
-function claimDailyReward() {
-    let now = Date.now();
-    if (now - state.lastRewardClaim < 86400000) { alert("Bugünkü ödülünüzü zaten aldınız!"); return; }
-    let current = dailyRewards[state.rewardDay - 1];
-    if (current.type === "gold") { state.balance += current.val; state.totalCollected += current.val; } 
-    else if (current.type === "mult") { state.tapPower = 10; setTimeout(() => { state.tapPower = 5; save(); }, 3600000); } 
-    else if (current.type === "energy") { state.energy = 500; }
-    state.lastRewardClaim = now; state.rewardDay++; if (state.rewardDay > 7) state.rewardDay = 1;
-    save(); updateUI(); renderRewardGrid(); alert(current.prize + " kazandınız!");
-}
-
+// BORSA SİSTEMİ
 function renderMarket() {
     const list = document.getElementById('market-list');
-    list.innerHTML = borsaKartlari.map(k => {
-        let isOwned = state.inventory.includes(k.id);
-        return `<div class="market-card"><div style="font-size:12px; height:40px"><strong>${k.name}</strong></div><div style="color:#ffd700; font-size:11px; margin:5px 0">+${k.income}/saat</div><button class="task-go-btn" style="font-size:10px; padding:5px" ${isOwned ? 'disabled' : ''} onclick="buyCard('${k.id}', ${k.price}, ${k.income})">${isOwned ? 'ALINDI' : k.price + ' KGn'}</button></div>`;
+    list.innerHTML = marketItems.map(item => {
+        const isOwned = state.inventory.includes(item.id);
+        return `
+            <div class="card">
+                <strong>${item.name}</strong>
+                <small>+${item.income}/saat</small>
+                <button class="btn-action" ${isOwned ? 'disabled' : ''} onclick="buyCard('${item.id}', ${item.price}, ${item.income})">
+                    ${isOwned ? 'ALINDI' : item.price + ' KGn'}
+                </button>
+            </div>
+        `;
     }).join('');
 }
 
-function loadFriends() {
-    const container = document.getElementById('friend-list-container');
-    if(window.db) {
-        db.collection("users").where("invitedBy", "==", state.userId).onSnapshot((snapshot) => {
-            document.getElementById('friend-count').innerText = snapshot.size;
-            container.innerHTML = snapshot.docs.map(doc => {
-                const f = doc.data();
-                return `<div class="friend-item"><div><strong>${f.username}</strong></div><div style="color:#ffd700; font-weight:bold">${Math.floor(f.balance).toLocaleString()} KGn</div></div>`;
-            }).join('');
-        });
+function buyCard(id, price, income) {
+    if (state.balance >= price) {
+        state.balance -= price;
+        state.hourlyIncome += income;
+        state.inventory.push(id);
+        renderMarket();
+        save();
+    } else {
+        alert("Yetersiz KGn!");
     }
 }
 
-function calculateLevel() {
-    let tc = state.totalCollected;
-    if (tc < 100000) return 1; if (tc < 350000) return 2; if (tc < 450000) return 3; if (tc < 550000) return 4; if (tc < 650000) return 5;
-    return 6;
+// ADSGRAM & GÖREVLER
+async function watchAd(type) {
+    if (typeof window.Adsgram === 'undefined') return alert("Reklam sistemi yükleniyor...");
+    
+    const AdController = window.Adsgram.init({ blockId: "23517" }); // Senin blok ID'n kalsın
+    
+    AdController.show().then(() => {
+        handleAdReward(type);
+    }).catch(() => {
+        alert("Şu an reklam hazır değil, lütfen sonra deneyin.");
+    });
 }
 
-function saveUsername() {
-    let input = document.getElementById('username-input').value;
-    if (input.trim().length > 2) { state.username = input; document.getElementById('login-screen').style.display = 'none'; init(); save(); }
+function handleAdReward(type) {
+    let now = Date.now();
+    let t = state.tasks[type];
+
+    if (type === 'gold') {
+        state.balance += 100;
+        t.count++;
+        if (t.count >= 10) {
+            t.cooldown = now + 86400000; // 24 saat
+            t.count = 0;
+        }
+    } else if (type === 'click') {
+        t.count++;
+        if (t.count >= 2) {
+            state.tapPower = 10;
+            setTimeout(() => { state.tapPower = 5; }, 3600000); // 1 saatlik 2x
+            t.hak--;
+            t.count = 0;
+            if (t.hak <= 0) {
+                t.cooldown = now + 86400000; // 24 saat beklet
+            }
+        }
+    } else if (type === 'energy') {
+        t.count++;
+        if (t.count >= 2) {
+            state.energy = 500;
+            t.hak--;
+            t.count = 0;
+            if (t.hak <= 0) {
+                t.cooldown = now + 86400000;
+            } else {
+                t.cooldown = now + 600000; // 10 dakika bekleme
+            }
+        }
+    }
+    renderTasks();
+    save();
+    alert("Ödül Tanımlandı!");
 }
 
 function renderTasks() {
     const list = document.getElementById('task-list');
-    const tasksHTML = [ { id: 'gold', title: '10 Reklam İzle', desc: 'Reklam başı 100 KGn', cooldown: state.tasks.gold.nextAvailable }, { id: 'click', title: '2 Reklam İzle', desc: '1 Saat 2x Tık', cooldown: state.tasks.click.nextAvailable }, { id: 'energy', title: '2 Reklam İzle', desc: 'Enerji Yeniler', cooldown: state.tasks.energy.nextAvailable } ];
-    list.innerHTML = tasksHTML.map(t => { let isWaiting = Date.now() < t.cooldown; return `<div class="task-card"><div><strong>${t.title}</strong><br><small>${t.desc}</small></div><button class="task-go-btn" ${isWaiting ? 'disabled' : ''} onclick="runRewardAd('${t.id}')">${isWaiting ? "BEKLE" : "İZLE"}</button></div>`; }).join('');
-}
+    const now = Date.now();
+    
+    const tasks = [
+        { id: 'click', title: '2 Reklam: 2x Tık (1 Saat)', key: 'click' },
+        { id: 'energy', title: '2 Reklam: Enerji Fulleyin', key: 'energy' },
+        { id: 'gold', title: '10 Reklam: KGn Kazanın', key: 'gold' }
+    ];
 
-function renderRewardGrid() {
-    const grid = document.getElementById('reward-days-list');
-    grid.innerHTML = dailyRewards.map(r => `<div class="reward-day ${state.rewardDay == r.d ? 'active' : ''}"><b>Gün ${r.d}</b><br>${r.prize}</div>`).join('');
-}
-
-function copyRefLink() { const link = document.getElementById('ref-link-display').innerText; navigator.clipboard.writeText(link).then(() => { alert("Davet linki kopyalandı!"); }); }
-function buyCard(id, price, income) { if (state.balance >= price) { state.balance -= price; state.hourlyIncome += income; state.inventory.push(id); renderMarket(); save(); } else alert("Yetersiz bakiye!"); }
-function createParticles() { const cont = document.getElementById('particle-container'); cont.innerHTML = ''; for(let i=0; i<80; i++) { let p = document.createElement('div'); p.className = 'particle'; p.style.left = Math.random()*100+'vw'; p.style.top = Math.random()*100+'vh'; p.style.width = Math.random()*3+1+'px'; p.style.height = p.style.width; p.style.animationDuration = (Math.random()*3+3)+'s'; p.style.animationDelay = (Math.random()*5)+'s'; cont.appendChild(p); } }
-function save() { state.lastUpdate = Date.now(); localStorage.setItem('kgn_coin_v50', JSON.stringify(state)); }
-window.onload = init;
+    list.innerHTML = tasks.map(task => {
+        let t = state.tasks[task.key];
+        let isWaiting = now < t.cooldown;
+        let btnText = isWaiting ? "BEKLEYİN" : "İZLE (" + t.count + ")";
         
+        return `
+            <div class="card" style="width:100%; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
+                <div style="text-align:left"><strong>${task.title}</strong><small>Kalan Hak: ${t.hak || 'Sınırsız'}</small></div>
+                <button class="btn-action" style="width:100px" ${isWaiting ? 'disabled' : ''} onclick="watchAd('${task.key}')">${btnText}</button>
+            </div>
+        `;
+    }).join('');
+}
+
+// YARDIMCI FONKSİYONLAR
+function showTab(id, el) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    if(el) el.classList.add('active');
+}
+
+function calculateOfflineEarnings() {
+    let diff = (Date.now() - state.lastUpdate) / 1000;
+    let earned = (state.hourlyIncome / 3600) * diff;
+    state.balance += earned;
+    state.energy = Math.min(500, state.energy + (diff * (500 / 10800)));
+}
+
+function saveUser() {
+    let user = document.getElementById('username-input').value;
+    if (user.length > 2) {
+        state.username = user;
+        document.getElementById('login-screen').style.display = 'none';
+        init();
+        save();
+    }
+}
+
+function createParticles() {
+    const cont = document.getElementById('particle-container');
+    for(let i=0; i<50; i++) {
+        let p = document.createElement('div');
+        p.className = 'particle';
+        p.style.left = Math.random() * 100 + 'vw';
+        p.style.top = Math.random() * 100 + 'vh';
+        p.style.width = Math.random() * 3 + 1 + 'px';
+        p.style.height = p.style.width;
+        p.style.animationDuration = (Math.random() * 5 + 5) + 's';
+        cont.appendChild(p);
+    }
+}
+
+function copyLink() {
+    navigator.clipboard.writeText(document.getElementById('ref-link').innerText);
+    alert("Davet linki kopyalandı!");
+}
+
+function save() { localStorage.setItem('kgn_v2026', JSON.stringify(state)); }
+
+window.onload = init;
+                 
