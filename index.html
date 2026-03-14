@@ -3,160 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KGn COİN</title>
+    <title>KGn COİN - Hamster Edition</title>
     <script src="https://sad.adsgram.ai/js/adstg.js" async></script>
     <link rel="stylesheet" href="style.css">
     <style>
-        * { -webkit-tap-highlight-color: transparent; outline: none; -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
+        :root { --gold: #ffd700; --bg: #000; --card: #111; }
+        * { -webkit-tap-highlight-color: transparent; outline: none; box-sizing: border-box; }
+        body { background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; overflow: hidden; }
         
-        #login-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle, #1a1a1a 0%, #000 100%);
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            z-index: 1000; transition: 0.5s;
-        }
-        #login-screen input {
-            padding: 15px; border-radius: 10px; border: 2px solid #ffd700;
-            background: #111; color: white; font-size: 18px; text-align: center;
-            width: 80%; margin-bottom: 20px; outline: none;
-        }
-        #login-screen button {
-            padding: 12px 40px; border-radius: 10px; border: none;
-            background: #ffd700; color: #000; font-weight: bold; font-size: 18px; cursor: pointer;
-        }
-        .coin-emoji {
-            font-size: 180px; display: block; text-align: center;
-            filter: drop-shadow(0 0 30px #ffd700); cursor: pointer;
-            transition: transform 0.1s;
-        }
-        .coin-emoji:active { transform: scale(0.95); }
+        /* Particle Background */
+        #particle-container { position: fixed; width: 100%; height: 100%; z-index: -1; }
+        .particle { position: absolute; background: var(--gold); border-radius: 50%; opacity: 0.3; animation: float linear infinite; }
+        @keyframes float { 0% { transform: translateY(0); opacity: 0; } 50% { opacity: 0.5; } 100% { transform: translateY(-100vh); opacity: 0; } }
 
-        .user-header { padding: 10px 20px; color: #ffd700; font-weight: bold; font-size: 14px; display: flex; align-items: center; }
-        
-        #reward-modal {
-            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 90%; background: #111; border: 2px solid #ffd700; border-radius: 20px;
-            z-index: 2000; padding: 20px; box-sizing: border-box;
-        }
-        .reward-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 15px; }
-        .reward-day { background: #222; border: 1px solid #333; padding: 5px; text-align: center; border-radius: 8px; font-size: 11px; }
-        .reward-day.active { border-color: #ffd700; background: #2a2a00; }
-        .close-btn { background: #ffd700; color: #000; border: none; padding: 8px; width: 100%; border-radius: 10px; margin-top: 15px; font-weight: bold; }
-        
-        .level-box { text-align: center; flex: 1; }
-        .level-text { color: #ffd700; font-weight: 800; font-size: 16px; }
+        /* Login */
+        #login-screen { position: fixed; inset: 0; background: radial-gradient(circle, #222 0%, #000 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; }
+        #login-screen input { padding: 15px; border-radius: 12px; border: 2px solid var(--gold); background: #111; color: white; width: 80%; margin-bottom: 20px; text-align: center; }
+        #login-screen button { padding: 12px 50px; border-radius: 12px; background: var(--gold); border: none; font-weight: bold; cursor: pointer; }
 
-        .invite-box { background: #111; border: 1px solid #ffd700; border-radius: 15px; padding: 20px; text-align: center; margin-top: 20px; }
-        .referral-link { background: #222; padding: 10px; border-radius: 10px; color: #ffd700; word-break: break-all; margin: 15px 0; font-size: 14px; border: 1px dashed #ffd700; }
-        
-        .particle {
-            position: absolute; background: #ffd700; border-radius: 50%; opacity: 0.6;
-            pointer-events: none; animation: float linear infinite;
-        }
-        @keyframes float {
-            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
-            50% { opacity: 0.6; }
-            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
-        }
+        /* Global Header */
+        .top-nav-stats { display: flex; justify-content: space-between; padding: 15px; background: rgba(255,255,255,0.05); }
+        .stat-item { font-size: 12px; color: var(--gold); font-weight: bold; }
+        #balance-container { text-align: center; margin: 20px 0; font-size: 40px; font-weight: 800; }
 
-        .market-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px; }
-        .market-card { background: #111; border: 1px solid #333; padding: 15px; border-radius: 12px; text-align: center; }
-        .friend-item { display: flex; justify-content: space-between; align-items: center; background: #1a1a1a; padding: 12px; border-radius: 10px; margin-bottom: 8px; border-left: 3px solid #ffd700; }
+        /* Coin Clicker */
+        .game-area { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 50vh; position: relative; }
+        .coin-btn { font-size: 180px; cursor: pointer; transition: transform 0.05s; filter: drop-shadow(0 0 20px var(--gold)); }
+        .coin-btn:active { transform: scale(0.92); }
+        .plus-anim { position: absolute; color: var(--gold); font-weight: bold; font-size: 24px; animation: upFade 0.8s forwards; pointer-events: none; }
+        @keyframes upFade { from { transform: translateY(0); opacity: 1; } to { transform: translateY(-100px); opacity: 0; } }
+
+        /* Energy Footer */
+        .footer-stats { position: absolute; bottom: 80px; width: 100%; padding: 0 20px; }
+        .energy-bar { width: 100%; height: 12px; background: #333; border-radius: 10px; overflow: hidden; border: 1px solid #444; }
+        #energy-fill { width: 100%; height: 100%; background: linear-gradient(90deg, var(--gold), #ffa500); transition: 0.3s; }
+        .energy-text { display: flex; justify-content: space-between; margin-top: 5px; font-size: 13px; color: #ccc; }
+
+        /* Tabs */
+        .tab-content { display: none; padding: 20px; height: calc(100vh - 150px); overflow-y: auto; }
+        .active { display: block; }
+        .section-title { color: var(--gold); text-align: center; margin-bottom: 20px; }
+
+        /* Cards & Tasks */
+        .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .card { background: var(--card); border: 1px solid #333; padding: 15px; border-radius: 15px; text-align: center; }
+        .card strong { display: block; margin-bottom: 5px; font-size: 14px; }
+        .card small { color: var(--gold); }
+        .btn-action { width: 100%; padding: 8px; margin-top: 10px; border-radius: 8px; border: none; background: var(--gold); font-weight: bold; cursor: pointer; }
+        .btn-action:disabled { background: #444; color: #888; }
+
+        /* Bottom Nav */
+        .nav-bar { position: fixed; bottom: 0; width: 100%; height: 70px; background: #111; display: flex; border-top: 1px solid #333; }
+        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 11px; color: #888; }
+        .nav-item.active { color: var(--gold); }
     </style>
 </head>
 <body>
-    <div id="login-screen" style="display: none;">
-        <span style="font-size: 60px; margin-bottom: 20px;">💰</span>
-        <h2 style="color: #ffd700;">KGn Coin</h2>
-        <input type="text" id="username-input" placeholder="Kullanıcı adınızı yazın..." maxlength="15">
-        <button onclick="saveUsername()">BAŞLAT</button>
-    </div>
 
-    <div id="reward-modal">
-        <h3 style="color: #ffd700; text-align: center; margin: 0;">7 Günlük Plan</h3>
-        <div class="reward-grid" id="reward-days-list"></div>
-        <button class="close-btn" onclick="claimDailyReward()">ÖDÜLÜ AL</button>
-        <button class="close-btn" style="background: #333; color: #fff; margin-top: 5px;" onclick="document.getElementById('reward-modal').style.display='none'">KAPAT</button>
+    <div id="login-screen" style="display: none;">
+        <span style="font-size: 60px;">💰</span>
+        <h2 style="color: var(--gold)">KGn Coin</h2>
+        <input type="text" id="username-input" placeholder="Kullanıcı adınız..." maxlength="15">
+        <button onclick="saveUser()">BAŞLAT</button>
     </div>
 
     <div id="particle-container"></div>
-    <div class="user-header" id="display-name"></div>
 
-    <div id="only-game-header">
-        <div class="top-stats">
-            <div class="stat-box">
-                <small>SAATLİK KAZANÇ</small>
-                <div id="hourly-display">+0 KGn</div>
-            </div>
-            <div class="level-box">
-                <small>SEVİYENİZ</small>
-                <div id="level-display" class="level-text">Seviye 1</div>
-            </div>
-            <div class="stat-box" style="text-align: right; cursor: pointer;" onclick="document.getElementById('reward-modal').style.display='block'">
-                <small>GÜNLÜK ÖDÜL</small>
-                <div style="color: #ffd700;">🎁 TIKLA</div>
-            </div>
-        </div>
+    <div class="top-nav-stats">
+        <div class="stat-item">SAATLİK: <span id="hourly-display">0</span></div>
+        <div class="stat-item">SEVİYE: <span id="level-display">1</span></div>
+        <div class="stat-item" onclick="showTab('tasks-tab')" style="cursor:pointer">🎁 ÖDÜL</div>
+    </div>
 
-        <div id="balance-container">
-            <span id="balance-text">0</span> <span style="color: #ffd700;">KGn</span>
-        </div>
+    <div id="balance-container">
+        <span id="balance-text">0</span> <small style="font-size: 15px; color: var(--gold)">KGn</small>
     </div>
 
     <div id="game-tab" class="tab-content active">
-        <div class="coin-wrapper">
-            <div id="coin-clicker" onclick="handleTap(event)">
-                <span class="coin-emoji">🪙</span>
-            </div>
+        <div class="game-area">
+            <div class="coin-btn" onclick="handleTap(event)">🪙</div>
         </div>
-        <div class="energy-footer">
-            <div class="energy-bar-container">
-                <div id="energy-fill"></div>
-            </div>
-            <div class="energy-info">
+        <div class="footer-stats">
+            <div class="energy-bar"><div id="energy-fill"></div></div>
+            <div class="energy-text">
                 <span>⚡ <span id="current-energy">500</span>/500</span>
-                <span id="cooldown-timer">Enerji Dolu</span>
+                <span id="cooldown-timer">03:00:00</span>
             </div>
         </div>
     </div>
 
-    <div id="invite-tab" class="tab-content">
-        <h2 class="section-title">Arkadaşlarını Davet Et</h2>
-        <div class="invite-box">
-            <p>%10 Komisyon ile Hem Arkadaşın Hem Sen Kazan!</p>
-            <div class="referral-link" id="ref-link-display">Link Oluşturuluyor...</div>
-            <button class="task-go-btn" onclick="copyRefLink()">LİNKİ KOPYALA</button>
-        </div>
-        <div style="margin-top: 25px;">
-            <h3 style="color: #ffd700; font-size: 18px; margin-bottom: 10px;">Arkadaşlar (<span id="friend-count">0</span>)</h3>
-            <div id="friend-list-container" class="scroll-area" style="max-height: 250px;"></div>
-        </div>
+    <div id="market-tab" class="tab-content">
+        <h2 class="section-title">Borsa Kartları</h2>
+        <div id="market-list" class="grid-container"></div>
     </div>
 
     <div id="tasks-tab" class="tab-content">
         <h2 class="section-title">Görevler</h2>
-        <div class="scroll-area" id="task-list"></div>
+        <div id="task-list"></div>
     </div>
 
-    <div id="market-tab" class="tab-content">
-        <h2 class="section-title">Sanal Ofis (Borsa)</h2>
-        <div id="market-list" class="market-grid"></div>
-    </div>
-
-    <div id="wallet-tab" class="tab-content">
-        <div class="empty-state" style="text-align: center; padding-top: 50px;">
-            <img src="https://cdn-icons-png.flaticon.com/512/2489/2489756.png" width="60">
-            <h3>Cüzdan Menüsü</h3>
-            <p>Yakında aktif edilecektir.</p>
+    <div id="invite-tab" class="tab-content">
+        <h2 class="section-title">Arkadaşlar</h2>
+        <div class="card" style="width: 100%;">
+            <p>Arkadaşlarını davet et, %10 kazan!</p>
+            <div id="ref-link" style="font-size:12px; background:#000; padding:10px; margin:10px 0; border:1px dashed var(--gold)">Yükleniyor...</div>
+            <button class="btn-action" onclick="copyLink()">LİNKİ KOPYALA</button>
         </div>
     </div>
 
-    <nav class="bottom-nav">
-        <div class="nav-btn" onclick="showTab('invite-tab', this)">👥<br>Davet</div>
-        <div class="nav-btn" onclick="showTab('tasks-tab', this)">📋<br>Görevler</div>
-        <div class="nav-btn active" onclick="showTab('game-tab', this)">🔘<br>Oyun</div>
-        <div class="nav-btn" onclick="showTab('market-tab', this)">📈<br>Borsa</div>
-        <div class="nav-btn" onclick="showTab('wallet-tab', this)">💰<br>Cüzdan</div>
+    <div id="wallet-tab" class="tab-content">
+        <div style="text-align: center; margin-top: 100px;">
+            <img src="https://cdn-icons-png.flaticon.com/512/2489/2489756.png" width="80" style="filter: grayscale(1) opacity(0.5)">
+            <h2 style="color: #666">Cüzdan Menüsü</h2>
+            <p style="color: #444">Henüz gelmedi, lütfen bekleyiniz.</p>
+        </div>
+    </div>
+
+    <nav class="nav-bar">
+        <div class="nav-item active" onclick="showTab('game-tab', this)">🔘<br>Oyun</div>
+        <div class="nav-item" onclick="showTab('market-tab', this)">📈<br>Borsa</div>
+        <div class="nav-item" onclick="showTab('tasks-tab', this)">📋<br>Görevler</div>
+        <div class="nav-item" onclick="showTab('invite-tab', this)">👥<br>Davet</div>
+        <div class="nav-item" onclick="showTab('wallet-tab', this)">💰<br>Cüzdan</div>
     </nav>
 
     <script src="script.js"></script>
